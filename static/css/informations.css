@@ -1,0 +1,47 @@
+h2,a {
+    color: #00509D;
+}
+
+.color {
+    text-decoration: none;
+    background-color: #D7E3FC;
+    border-radius: 50px;
+    padding: 10px 20px;
+}
+
+.infor {
+    text-decoration: none;
+    background-color: #D7E3FC;
+    border-radius: 50px;
+    padding: 10px 20px;
+}
+
+.infor img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50px;
+}
+
+/* Media query for screens less than or equal to 768px */
+@media (max-width: 768px) {
+    .color {
+        font-size: 28px;
+        padding: 5px 8px;
+    }
+
+    .infor h3 {
+        font-size: 20px;
+    }
+
+    .infor .h3 {
+        font-size: 20px;
+    }
+
+    .infor img {
+        width: 30px;
+        height: 30px;
+    }
+
+}
+
+

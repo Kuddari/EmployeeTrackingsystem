@@ -1,0 +1,56 @@
+.color {
+    color: #00509D;
+    background-color: #D7E3FC;
+    width: 350px;
+    border-radius: 50px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.dec {
+    text-decoration: none;
+    color: #00509D;
+    background-color: #D7E3FC;
+    border-radius: 50px;
+    padding: 15px 30px;
+    
+}
+
+.dece {
+    margin-top: 10%;
+}
+
+@media (max-width: 768px) {
+    .color {
+        font-size: 30px;
+        width: 280px;
+    }
+
+    .dec {
+       font-size: 30px;
+       padding: 5px 10px;
+    }
+
+    .dece {
+        margin-top: 15%;
+    }
+    
+}
+
+@media (max-width: 600px) {
+    .color {
+        font-size: 25px;
+        width: 240px;
+    }
+
+    .dec {
+       font-size: 25px;
+       padding: 5px 10px;
+    }
+
+    .dece {
+        margin-top: 15%;
+    }
+    
+}
+

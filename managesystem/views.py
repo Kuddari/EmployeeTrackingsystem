@@ -4,3 +4,6 @@ from django.shortcuts import render
 
 def login_view(request):
     return render(request, "login.html")
+
+def selectfilter_view(request):
+    return render(request,"selectfilter.html")

@@ -14,40 +14,78 @@
 </head>
 <body>
 
-    <!-- Your content goes here -->
+    <!-- if user == คณบดี -->
 
-    <div class="container mt-5">
-        
-        <h3 class="text-center mb-4">กรอกเกณฑ์</h3>
-        <div class="table-responsive">
+   <div class="container mt-5">
+
+    <h3 class="text-center mb-4">กรอกเกณฑ์</h3>
+    <div class="table-responsive">
         <form action="submit.php" method="post">
-        <table id="workdata-table" class="table table-bordered table-striped">
-            <thead class="thead-dark">
-                <tr>
-                    <th data-filter="true" data-filter-type="select">งาน</th>
-                    <th data-filter="true" data-filter-type="select">เกณท์</th>
-                </tr>
-            </thead>
-            <tbody>
-               
-                <tr>
-                    <td>งาน1asdasdsadasd</td>
-                    <td class="text-center w-50"><input type="text" name="" placeholder="0"></td>
-                </tr>
+            <table id="workdata-table" class="table table-bordered table-striped text-center">
+                <thead class="thead-dark">
+                    <tr>
+                        <th data-filter="true" data-filter-type="select">งาน</th>
+                        <th data-filter="true" data-filter-type="select">เกณท์</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-            </tbody>
-        </table>
-        <div class="d-flex justify-content-end">
-            <button  type="submit" style="border-radius: 50px;">Submit</button>
+                    <tr>
+                        <td>งาน1asdasdsadasd</td>
+                        <td class="text-center w-50">
+                            <input type="text" name="" placeholder="0"></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                <div class="d-flex justify-content-end">
+                    <button type="submit" style="border-radius: 50px;">Submit</button>
+                </div>
+            </form>
         </div>
-    </form>
-        </div>
-        <!-- Move the "Items per page" dropdown under the table -->
-        
-          
-            
-    
+
     </div>
+
+
+    <!-- elseif == user อาจารย์ -->
+
+  <div class="container mt-5">
+
+    <h3 class="text-center mb-4">กรอกเทอม</h3>
+    <div class="table-responsive">
+        <form action="submit.php" method="post">
+            <table
+                id="workdata-table"
+                class="table table-bordered table-striped text-center">
+                <thead class="thead-dark">
+                    <tr>
+                        <th data-filter="true" data-filter-type="select">งาน</th>
+                        <th data-filter="true" data-filter-type="select">เกณท์</th>
+                        <th data-filter="true" data-filter-type="select">เทอม 1</th>
+                        <th data-filter="true" data-filter-type="select">เทอม 2</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr>
+                        <td>งาน1asdasdsadasd</td>
+                        <td class="text-center w-25">10</td>
+                        <td class="text-center w-25">
+                            <input type="text" name="" placeholder="0"></td>
+                            <td class="text-center w-25">
+                                <input type="text" name="" placeholder="0"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" style="border-radius: 50px;">Submit</button>
+                    </div>
+            </form>
+        
+    </div>
+
+</div>
 
 <!-- Include Bootstrap JavaScript and jQuery (optional) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -10,3 +10,9 @@ def selectfilter_view(request):
 
 def informations_view(request):
     return render(request,"informations.html")
+
+def formreport_view(request):
+    return render(request,"formreport.html")
+
+def report_view(request):
+    return render(request,"report.html")

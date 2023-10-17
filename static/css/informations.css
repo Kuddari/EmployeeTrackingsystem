@@ -1,4 +1,4 @@
-h2,h3,a {
+h1,h2,h3,h4,h5,h6,p,a {
     color: #00509D;
 }
 
@@ -21,6 +21,8 @@ h2,h3,a {
     height: 45px;
     border-radius: 50px;
 }
+
+
 
 /* Media query for screens less than or equal to 768px */
 @media (max-width: 768px) {

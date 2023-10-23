@@ -7,6 +7,7 @@
     <title>เลือกตำแหน่งงาน</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/informationstaff.css' %}">
+    
 </head>
 <body>
     <div class="container">
@@ -17,7 +18,12 @@
             <div class="col-6 col-lg-6 d-flex justify-content-end">
                 <a class="h2 color1" href="">กำหนดเกณฑ์</a>
             </div>
-            
+            <div class="col-12 col-lg-12 d-flex justify-content-end mt-2">
+                <label class="switch">
+                    <input id="toggleButton" type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+            </div>
         </div>
         <div class="row mt-5 infor">
             <div class="col-1 d-flex justify-content-center">
@@ -38,6 +44,37 @@
         </div>
     </div>
 
+    
+    
+    <!-- <button id="toggleButton" class="btn btn-primary">Toggle เทอม 2</button> -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleButton = document.getElementById('toggleButton');
+
+            // Function to toggle the state in Local Storage
+            const toggleColumnState = () => {
+                let isColumnVisible = localStorage.getItem('isColumnVisible') === 'true';
+                isColumnVisible = !isColumnVisible;
+                localStorage.setItem('isColumnVisible', isColumnVisible.toString());
+                updateSwitchState(isColumnVisible);
+            };
+
+            // Function to update the switch state
+            const updateSwitchState = (isColumnVisible) => {
+                toggleButton.checked = isColumnVisible;
+            };
+
+            // Add a click event listener to the button
+            toggleButton.addEventListener('click', function () {
+                toggleColumnState();
+            });
+
+            // Check the saved state and set the initial switch state
+            const isColumnVisible = localStorage.getItem('isColumnVisible') === 'true';
+            updateSwitchState(isColumnVisible);
+        });
+    </script>
     
 </body>
 </html>

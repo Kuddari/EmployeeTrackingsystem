@@ -1,7 +1,8 @@
 from django.db import models
-from .models import Attachment
+from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
+
 
 # Create your models here.
 class Work(models.Model):
@@ -28,9 +29,7 @@ class Work(models.Model):
         return f"{self.name}"
     
 class Employee(models.Model):
-    username = models.CharField(max_length=50)
-    firstname = models.CharField(max_length=100)
-    lastname = models.CharField(max_length=100)
+    username = models.ForeignKey(User, on_delete=models.CASCADE)
     POSITION_CHOICES = [
         ('Dean', 'Dean'),
         ('Lecturer', 'Lecturer'),
@@ -38,13 +37,14 @@ class Employee(models.Model):
         # Add more choices as needed
     ]
     position = models.CharField(max_length=50, choices=POSITION_CHOICES)
+
     def __str__(self):
-        return f"{self.username}"
+        return f"{self.username.first_name} {self.username.last_name}"
 
 class WorkUnit(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     workname = models.ForeignKey(Work, on_delete=models.CASCADE)
-    unit = models.PositiveIntegerField()
+    unit = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return f"{self.employee} - {self.workname} - {self.unit}" 
@@ -57,7 +57,11 @@ class Term(models.Model):
     def is_current_term(self):
         current_date = timezone.now().date()
         return self.start_date <= current_date <= self.end_date
+    
 
+class Attachment(models.Model):
+    # result = models.ForeignKey(Result, on_delete=models.CASCADE)
+    file = models.FileField(upload_to='attachments/')
 
 class Result(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
@@ -65,7 +69,7 @@ class Result(models.Model):
     term1 = models.PositiveIntegerField(default=0)
     term2 = models.PositiveIntegerField(default=0)
     total = models.PositiveIntegerField(default=0, editable=False)
-    attachments = models.ManyToManyField(Attachment)
+    attachments = models.ManyToManyField(Attachment, editable=False)
 
     def calculate_total_units(self):
         current_term_units = 0
@@ -75,26 +79,26 @@ class Result(models.Model):
         for term in terms:
             if term.is_current_term():
                 if term.term_name == 'term1':
-                    current_term_units = self.term1_units
+                    current_term_units = self.term1
                 else:
-                    current_term_units = self.term2_units
+                    current_term_units = self.term2
                 break
 
         if self.work.workname == 'Math':
             # Calculate total units for Math
-            self.total_units = current_term_units
+            self.total = current_term_units
+            self.total = self.term1 + self.term2
         else:
             # Set total_units to the current term's units for other subjects
-            self.total_units = self.term1_units + self.term2_units
+            self.total = self.term1 + self.term2
 
         self.save()
 
     def __str__(self):
-        return f"{self.employee} - {self.work} - Total Units: {self.total_units}"
+        return f"{self.employee} - {self.work} - Total Units: {self.total} - {self.attachments}"
     
-class Attachment(models.Model):
-    result = models.ForeignKey(Result, on_delete=models.CASCADE)
-    file = models.FileField(upload_to='attachments/')
+# class savedata (models.Model):
+#     username = models.ForeignKey(Result, on_delete=models.CASCADE)
+#     attachments = models.ManyToManyField(Attachment)
 
-    
 

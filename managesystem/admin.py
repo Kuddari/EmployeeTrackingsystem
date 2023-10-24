@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Work, Employee, WorkUnit, Term, Result, Attachment
+from .models import *
 
 # Register your models here
 admin.site.register(Work)
@@ -8,3 +8,5 @@ admin.site.register(WorkUnit)
 admin.site.register(Term)
 admin.site.register(Result)
 admin.site.register(Attachment)
+# admin.site.register(savedata)
+

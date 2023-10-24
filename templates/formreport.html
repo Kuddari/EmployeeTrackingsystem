@@ -7,10 +7,7 @@
     <title>Work History</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/formreport.css' %}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha2/dist/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
 </head>
 <body>
 
@@ -20,7 +17,7 @@
 
     <h3 class="text-center mb-4">กรอกเกณฑ์</h3>
     <div class="table-responsive">
-        <form action="submit.php" method="post">
+        <form action="" method="post">
             <table id="workdata-table" class="table table-bordered table-striped text-center">
                 <thead class="thead-dark">
                     <tr>
@@ -62,7 +59,7 @@
                         <th data-filter="true" data-filter-type="select">งาน</th>
                         <th data-filter="true" data-filter-type="select">เกณท์</th>
                         <th data-filter="true" data-filter-type="select">เทอม 1</th>
-                        <th data-filter="true" data-filter-type="select">เทอม 2</th>
+                        <th id="sem2Header" data-filter="true" data-filter-type="select">เทอม 2</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -70,11 +67,9 @@
                     <tr>
                         <td>งาน1asdasdsadasd</td>
                         <td class="text-center w-25">10</td>
-                        <td class="text-center w-25">
-                            <input type="text" name="" placeholder="0"></td>
-                            <td class="text-center w-25">
-                                <input type="text" name="" placeholder="0"></td>
-                            </tr>
+                        <td class="text-center w-25"><input type="text" name="" placeholder="0"></td>
+                            <td class="text-center w-25" id="sem2Cell"><input type="text" name="" placeholder="0"></td>
+                    </tr>
                         </tbody>
                     </table>
                     
@@ -87,18 +82,34 @@
 
 </div>
 
-<!-- Include Bootstrap JavaScript and jQuery (optional) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="/path/to/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.7/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.7/js/dataTables.bootstrap4.min.js"></script>
-<script src="https://cdn.datatables.net/select/1.3.4/js/dataTables.select.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sem2Header = document.getElementById('sem2Header');
+        const sem2Cell = document.getElementById('sem2Cell');
 
+        // Retrieve the state from Local Storage
+        let isColumnVisible = localStorage.getItem('isColumnVisible') === 'true';
 
+        // Function to toggle the column visibility
+        const toggleColumn = () => {
+            if (isColumnVisible) {
+                // Show เทอม 2
+                sem2Header.style.display = '';
+                sem2Cell.style.display = '';
+            } else {
+                // Hide เทอม 2
+                sem2Header.style.display = 'none';
+                sem2Cell.style.display = 'none';
+            }
+        };
 
+        console.log('isColumnVisible:', isColumnVisible);
+
+        toggleColumn();
+    });
+</script>
+
+    
 
 
 </body>

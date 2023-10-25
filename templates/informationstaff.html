@@ -10,10 +10,12 @@
     
 </head>
 <body>
+   
     <div class="container">
+        {% for text in employees %}
         <div class="row mt-4">
             <div class="col-6 col-lg-6 d-flex justify-content-start">
-                <h2 class="color">ตำแหน่งงาน</h2>
+                <h2 class="color">{{text.position}}</h2>
             </div>
             <div class="col-6 col-lg-6 d-flex justify-content-end">
                 <a class="h2 color1" href="">กำหนดเกณฑ์</a>
@@ -24,6 +26,7 @@
                     <span class="slider round"></span>
                 </label>
             </div>
+           
         </div>
         <div class="row mt-5 infor">
             <div class="col-1 d-flex justify-content-center">
@@ -34,7 +37,7 @@
                 <img class="mt-1" src="https://media.istockphoto.com/id/517188688/th/%E0%B8%A3%E0%B8%B9%E0%B8%9B%E0%B8%96%E0%B9%88%E0%B8%B2%E0%B8%A2/%E0%B8%A0%E0%B8%B9%E0%B8%A1%E0%B8%B4%E0%B8%97%E0%B8%B1%E0%B8%A8%E0%B8%99%E0%B9%8C%E0%B8%A0%E0%B8%B9%E0%B9%80%E0%B8%82%E0%B8%B2.jpg?s=612x612&w=0&k=20&c=jreXJAxTVORbxURWML1sikQH5SGBbUdb8sL728vnalI=" alt="50*50">
             </div>
             <div class="col-5">
-                <h3 class="d-flex justify-content-center mt-1">Sulaiman Charaae</h3>
+                <h3 class="d-flex justify-content-center mt-1">{{text.username.first_name}} {{text.username.last_name}}</h3>
             </div>
             
             <div class="col-4">
@@ -42,6 +45,7 @@
             </div>
            
         </div>
+        {% endfor %}
     </div>
 
     

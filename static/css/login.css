@@ -1,6 +1,6 @@
 body {
-    background: radial-gradient(circle at top left, #940505a5, transparent),
-                radial-gradient(circle at bottom right, #efd8ad, transparent);
+    background: radial-gradient(circle at top left, #00509D, transparent),
+                radial-gradient(circle at bottom right, #D7E3FC, transparent);
     background-size: cover; /* Use cover to make the background cover the entire body */
     background-repeat: no-repeat;
     min-height: 100vh; /* Use min-height to ensure the background covers tall content */
@@ -41,7 +41,7 @@ body {
 }
 /* กำหนดสีและตำแหน่งของข้อความ "Login" */
 .login-header {
-    color: crimson;
+    color: #00509D;
     text-align: left;
     font-size: 24px;
     font-weight: bold;

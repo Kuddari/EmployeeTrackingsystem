@@ -17,13 +17,13 @@
         </div>
         <div class="row text-center">
             <div class="col-4 col-lg-4 dece">
-                <a class="h1 dec" href="">พนักงาน</a>
+                <a class="h1 dec" href="{% url 'informationstaff' %}?position=Researcher">อาจารย์</a>
             </div>
             <div class="col-4 col-lg-4 dece">
-                <a class="h1 dec" href="">อาจารย์</a>
+                <a class="h1 dec" href="{% url 'informationstaff' %}?position=Lecturer">รองคณบดี</a>
             </div>
             <div class="col-4 col-lg-4 dece">
-                <a class="h1 dec" href="">รองคณบดี</a>
+                <a class="h1 dec" href="{% url 'informationstaff' %}?position=Dean">คณบดี</a>
             </div>
         </div>
     </div>

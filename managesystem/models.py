@@ -4,7 +4,6 @@ from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 
-# Create your models here.
 class Work(models.Model):
     name = models.CharField(max_length=100)
     unitsfordeans = models.PositiveIntegerField(
@@ -34,12 +33,12 @@ class Employee(models.Model):
         ('Dean', 'Dean'),
         ('Lecturer', 'Lecturer'),
         ('Researcher', 'Researcher'),
-        # Add more choices as needed
     ]
     position = models.CharField(max_length=50, choices=POSITION_CHOICES)
 
     def __str__(self):
         return f"{self.username.first_name} {self.username.last_name}"
+
 
 class WorkUnit(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
@@ -95,7 +94,7 @@ class Result(models.Model):
         self.save()
 
     def __str__(self):
-        return f"{self.employee} - {self.work} - Total Units: {self.total} - {self.attachments}"
+        return f"{self.employee} - {self.work} - Total Units: {self.total}"
     
 # class savedata (models.Model):
 #     username = models.ForeignKey(Result, on_delete=models.CASCADE)

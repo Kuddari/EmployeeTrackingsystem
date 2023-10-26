@@ -1,0 +1,71 @@
+{% include "navbar.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     {% load static %}
+    <link rel="stylesheet" href="{% static 'css/formreport.css' %}">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container mt-5">
+
+        <h3 class="text-center mb-4">กรอกเทอม</h3>
+        <div class="table-responsive">
+            <form action="submit.php" method="post">
+                <table id="workdata-table" class="table table-bordered table-striped text-center">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th data-filter="true" data-filter-type="select">งาน</th>
+                            <th data-filter="true" data-filter-type="select">เกณท์</th>
+                            <th data-filter="true" data-filter-type="select">เทอม 1</th>
+                            <th id="sem2Header" data-filter="true" data-filter-type="select">เทอม 2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    
+                        <tr>
+                            <td>งาน1asdasdsadasd</td>
+                            <td class="text-center w-25">10</td>
+                            <td class="text-center w-25"><input type="text" name="" placeholder="0"></td>
+                                <td class="text-center w-25" id="sem2Cell"><input type="text" name="" placeholder="0"></td>
+                        </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" style="border-radius: 50px;">Submit</button>
+                        </div>
+                </form>
+            
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const sem2Header = document.getElementById('sem2Header');
+                const sem2Cell = document.getElementById('sem2Cell');
+        
+                // Retrieve the state from Local Storage
+                let isColumnVisible = localStorage.getItem('isColumnVisible') === 'true';
+        
+                // Function to toggle the column visibility
+                const toggleColumn = () => {
+                    if (isColumnVisible) {
+                        // Show เทอม 2
+                        sem2Header.style.display = '';
+                        sem2Cell.style.display = '';
+                    } else {
+                        // Hide เทอม 2
+                        sem2Header.style.display = 'none';
+                        sem2Cell.style.display = 'none';
+                    }
+                };
+        
+                console.log('isColumnVisible:', isColumnVisible);
+        
+                toggleColumn();
+            });
+        </script>
+</body>
+</html>

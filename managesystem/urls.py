@@ -9,6 +9,7 @@ urlpatterns = [
     path('informationstaff/',views.informationstaff_view,name='informationstaff'),
     path('informationuser/',views.informationuser_view,name='informationuser'),
     path('formreport/',views.formreport_view,name='formreport'),
+    path('formreportuser/',views.formreportuser_view,name='formreportuser'),
     path('report/',views.report_view,name='report'),
 
 ]

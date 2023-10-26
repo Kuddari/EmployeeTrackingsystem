@@ -33,5 +33,35 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleButton = document.getElementById('toggleButton');
+
+            // Function to toggle the state in Local Storage
+            const toggleColumnState = () => {
+                let isColumnVisible = localStorage.getItem('isColumnVisible') === 'true';
+                isColumnVisible = !isColumnVisible;
+                localStorage.setItem('isColumnVisible', isColumnVisible.toString());
+                updateSwitchState(isColumnVisible);
+            };
+
+            // Function to update the switch state
+            const updateSwitchState = (isColumnVisible) => {
+                toggleButton.checked = isColumnVisible;
+            };
+
+            // Add a click event listener to the button
+            toggleButton.addEventListener('click', function () {
+                toggleColumnState();
+            });
+
+            // Check the saved state and set the initial switch state
+            const isColumnVisible = localStorage.getItem('isColumnVisible') === 'true';
+            updateSwitchState(isColumnVisible);
+        });
+    </script>
+    
+
 </body>
 </html>

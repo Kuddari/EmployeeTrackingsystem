@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login,authenticate
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.contrib import messages
 from .models import *
 
@@ -72,8 +73,26 @@ def informationuser_view(request):
 
 @login_required
 def formreport_view(request):
+    selected_position = request.GET.get('position')
 
-    return render(request, "formreport.html")
+    if selected_position is None:
+        employees = Employee.objects.all()
+    else:
+        # Filter employees based on the query parameter
+        employees = Employee.objects.filter(position=selected_position)
+    work_units = WorkUnit.objects.filter(employee__in=employees)
+
+    context = {
+        'employees': employees,
+        'work_units': work_units,
+        'selected_position': selected_position,
+    }
+
+    return render(request, 'formreport.html', context)
+
+
+def formreportuser_view(request):
+    return render(request,'formreportuser.html')
 
 @login_required
 def report_view(request):

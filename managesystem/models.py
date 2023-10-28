@@ -41,7 +41,7 @@ class Employee(models.Model):
     position = models.CharField(max_length=50, choices=POSITION_CHOICES)
 
     def __str__(self):
-        return f"{self.username.first_name} {self.username.last_name}"
+        return f"{self.username}"
 
 
 class WorkUnit(models.Model):

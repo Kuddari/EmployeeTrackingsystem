@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login,authenticate
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect,Http404
+from django.urls import reverse
 from django.contrib import messages
 from .models import *
 from django.conf import settings
@@ -74,12 +75,37 @@ def informationuser_view(request):
 
 @login_required
 def formreport_view(request):
+    if request.method == 'POST':
+    # Get the selected position
+        selected_position = request.GET.get('position')
+        
+        # Retrieve the relevant Indicator objects based on the selected position
+        indicators = Indicator.objects.all()  # You may need to filter this based on your specific criteria
+    
+        for indicator in indicators:
+            # Build the field names based on the indicator's ID
+            units_for_deans = request.POST.get(f'unitsfordeans_{indicator.id}')
+            units_for_lecturers = request.POST.get(f'unitsforlecturers_{indicator.id}')
+            units_for_employees = request.POST.get(f'unitsforemployees_{indicator.id}')
+            
+            # Update the indicator based on the selected position
+            if selected_position == 'Dean':
+                indicator.unitsfordeans = units_for_deans
+            elif selected_position == 'Lecturer':
+                indicator.unitsforlecturers = units_for_lecturers
+            elif selected_position == 'Researcher':
+                indicator.unitsforemployees = units_for_employees
+
+            indicator.save()
+
+        return HttpResponseRedirect(reverse('informationstaff') + f'?position={selected_position}')
+
+
     selected_position = request.GET.get('position')
 
     if selected_position is None:
         employees = Employee.objects.all()
     else:
-        # Filter employees based on the query parameter
         employees = Employee.objects.filter(position=selected_position)
     work_units = WorkUnit.objects.filter(employee__in=employees)
 
@@ -90,6 +116,8 @@ def formreport_view(request):
     }
 
     return render(request, 'formreport.html', context)
+
+
 
 
 def formreportuser_view(request):

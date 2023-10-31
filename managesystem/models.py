@@ -34,6 +34,7 @@ class Indicator(models.Model):
 class Work(models.Model):
     name = models.CharField(max_length=50)
     indicator = models.ManyToManyField(Indicator)
+
     
     
     def __str__(self):

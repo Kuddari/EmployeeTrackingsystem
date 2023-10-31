@@ -9,4 +9,5 @@ admin.site.register(Term)
 admin.site.register(Result)
 admin.site.register(Attachment)
 admin.site.register(savedata)
+admin.site.register(Indicator)
 

@@ -10,47 +10,46 @@
 
 </head>
 <body>
-
     <!-- if user == คณบดี -->
-
    <div class="container mt-5">
-
     <h3 class="text-center mb-4">กรอกเกณฑ์</h3>
     <div class="table-responsive">
         <form action="" method="post">
             {% csrf_token %}
-            <table id="workdata-table" class="table table-bordered table-striped text-center">
+            <table id="workdata-table" class="table table-bordered">
                 <thead class="thead-dark">
-                    <tr>
-                        <th data-filter="true" data-filter-type="select">งาน</th>
-                        <th data-filter="true" data-filter-type="select">เกณท์</th>
+                    <tr class="text-center">
+                        <th data-filter="true" data-filter-type="select">กิจกรรม</th>
+                        <th data-filter="true" data-filter-type="select">ตัวชี้วัด</th>
+                        <th data-filter="true" data-filter-type="select">เกณฑ์</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for works in work_units %}
-                        <tr>
-                            <td>{{ works.workname }}</td>
-                            <td class="text-center w-50">
-                                <input type="text" name="" placeholder="{% if selected_position == 'Dean' %}{{ works.workname.unitsfordeans }}{% elif selected_position == 'Lecturer' %}{{ works.workname.unitsforlecturers }}{% elif selected_position == 'Researcher' %}{{ works.workname.unitsforemployees }}{% endif %}">
-                            </td>
-                        
-                        </tr>
+                    <tr>
+                        <td rowspan="{{ works.workname.indicator.count }}">{{ works.workname }}</td>
+                        <td>{{ works.workname.indicator.all.0 }}</td>
+                        <td class="text-center w-50">
+                            <input type="text" name="" placeholder="{% if selected_position == 'Dean' %}{{ works.workname.indicator.all.0.unitsfordeans }}{% elif selected_position == 'Lecturer' %}{{ works.workname.unitsforlecturers }}{% elif selected_position == 'Researcher' %}{{ works.workname.unitsforemployees }}{% endif %}">
+                        </td>
+                    </tr>
+                    {% for indicator in works.workname.indicator.all|slice:"1:" %}
+
+                    <tr>
+                        <td>{{ indicator }}</td>
+                        <td class="text-center w-50">
+                            <input type="text" name="" placeholder="{% if selected_position == 'Dean' %}{{ indicator.unitsfordeans }}{% elif selected_position == 'Lecturer' %}{{ works.workname.unitsforlecturers }}{% elif selected_position == 'Researcher' %}{{ works.workname.unitsforemployees }}{% endif %}">
+                        </td>
+                    </tr>
                     {% endfor %}
-                </tbody>     
+                    {% endfor %}
+                </tbody>
             </table>
-            
-                <div class="d-flex justify-content-end">
-                    <button type="submit" style="border-radius: 50px;">Submit</button>
-                </div>
-            </form>
-        </div>
-
+            <div class="d-flex justify-content-end">
+                <button type="submit" style="border-radius: 50px;">Submit</button>
+            </div>
+        </form>
     </div>
-
 </div>
-
-    
-
-
 </body>
 </html>

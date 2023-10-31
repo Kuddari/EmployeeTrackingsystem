@@ -4,8 +4,8 @@ from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 
-class Work(models.Model):
-    name = models.CharField(max_length=100)
+class Indicator(models.Model):
+    indicator = models.TextField(default='None')
     unitsfordeans = models.PositiveIntegerField(
         default=0,  # Set default value to 0
         validators=[
@@ -27,9 +27,19 @@ class Work(models.Model):
             MaxValueValidator(100)  # Maximum value (adjust as needed)
         ]
     )
+
+    def __str__(self):
+        return f"{self.indicator}"
+
+class Work(models.Model):
+    name = models.CharField(max_length=50)
+    indicator = models.ManyToManyField(Indicator)
+    
     
     def __str__(self):
         return f"{self.name}"
+
+    
     
 class Employee(models.Model):
     username = models.ForeignKey(User, on_delete=models.CASCADE)

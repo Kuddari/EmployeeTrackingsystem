@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.contrib import messages
 from .models import *
+from django.conf import settings
 
 
 def login_view(request):

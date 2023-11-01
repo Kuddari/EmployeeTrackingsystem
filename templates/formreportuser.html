@@ -13,24 +13,59 @@
 
         <h3 class="text-center mb-4">กรอกเทอม</h3>
         <div class="table-responsive">
-            <form action="submit.php" method="post">
-                <table id="workdata-table" class="table table-bordered table-striped text-center">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <table id="workdata-table" class="table table-bordered">
                     <thead class="thead-dark">
-                        <tr>
-                            <th data-filter="true" data-filter-type="select">งาน</th>
+                        <tr class="text-center">
+                            <th data-filter="true" data-filter-type="select">กิจกรรม / โครงการ / งาน</th>
+                            <th data-filter="true" data-filter-type="select">ตัวชี้วัด / เกณฑ์การประเมิน</th>
                             <th data-filter="true" data-filter-type="select">เกณท์</th>
                             <th data-filter="true" data-filter-type="select">เทอม 1</th>
                             <th id="sem2Header" data-filter="true" data-filter-type="select">เทอม 2</th>
                         </tr>
                     </thead>
                     <tbody>
-    
+                        {% for works in result %}
                         <tr>
-                            <td>งาน1asdasdsadasd</td>
-                            <td class="text-center w-25">10</td>
-                            <td class="text-center w-25"><input type="text" name="" placeholder="0"></td>
-                                <td class="text-center w-25" id="sem2Cell"><input type="text" name="" placeholder="0"></td>
+                            <td rowspan="{{ works.work.workname.indicator.count }}">{{ works.work.workname }}</td>
+                            <td> {{works.work.workname.indicator.all.0}} </td>
+                            {% if works.employee.position == 'Dean' %}
+                            <td class="text-center">{{works.work.workname.indicator.all.0.unitsfordeans}}</td>
+                            {% elif works.employee.position == 'Lecturer'  %}
+                            <td class="text-center">{{works.work.workname.indicator.all.0.unitsforlecturers}}</td>
+                            {% elif works.employee.position == 'Researcher'  %}
+                            <td class="text-center">{{works.work.workname.indicator.all.0.unitsforemployees}}</td>
+                            {% endif %}
+
+                           <td>
+                                <input type="number" name="term1_{{works.id}}" value="{{works.term1}}">
+                            </td>
+                            <td>
+                                <input type="number" name="term2_{{works.id}}" value="{{works.term2}}">
+                            </td>
                         </tr>
+                        {% for indicator in works.work.workname.indicator.all|slice:"1:" %}
+                        <tr>
+                            <td>{{ indicator }}</td>
+                            {% if works.employee.position == 'Dean' %}
+                            <td class="text-center">{{indicator.unitsfordeans}}</td>
+                            {% elif works.employee.position == 'Lecturer'  %}
+                            <td class="text-center">{{indicator.unitsforlecturers}}</td>
+                            {% elif works.employee.position == 'Researcher'  %}
+                            <td class="text-center">{{indicator.unitsforemployees}}</td>
+                            {% endif %}
+                            <td>
+                                <input type="number" name="term1_{{indicator.id}}" value="{{indicator.term1}}">
+                            </td>
+                            <td>
+                                    <input type="number" name="term2_{{indicator.id}}"" value="{{indicator.term2}}">
+                                </td>
+                        </tr>
+                        {% endfor %}
+
+                    {% endfor %}
+                    
                             </tbody>
                         </table>
                         

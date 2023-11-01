@@ -19,8 +19,8 @@
             <table id="workdata-table" class="table table-bordered">
                 <thead class="thead-dark">
                     <tr class="text-center">
-                        <th data-filter="true" data-filter-type="select">กิจกรรม</th>
-                        <th data-filter="true" data-filter-type="select">ตัวชี้วัด</th>
+                        <th data-filter="true" data-filter-type="select">กิจกรรม / โครงการ / งาน</th>
+                        <th data-filter="true" data-filter-type="select">ตัวชี้วัด / เกณฑ์การประเมิน</th>
                         <th data-filter="true" data-filter-type="select">เกณฑ์</th>
                     </tr>
                 </thead>
@@ -41,7 +41,7 @@
                     <tr>
                         <td>{{ indicator }}</td>
                         <td class="text-center w-50">
-                            <input type="numbers" value="{% if selected_position == 'Dean' %}{{ indicator.unitsfordeans }}{% elif selected_position == 'Lecturer' %}{{  indicator.unitsforlecturers }}{% elif selected_position == 'Researcher' %}{{ indicator.unitsforemployees }}{% endif %}" 
+                            <input type="number" value="{% if selected_position == 'Dean' %}{{ indicator.unitsfordeans }}{% elif selected_position == 'Lecturer' %}{{  indicator.unitsforlecturers }}{% elif selected_position == 'Researcher' %}{{ indicator.unitsforemployees }}{% endif %}" 
                             name="{% if selected_position == 'Dean' %}unitsfordeans_{{ indicator.id }}{% elif selected_position == 'Lecturer' %}unitsforlecturers_{{ indicator.id }}{% elif selected_position == 'Researcher' %}unitsforemployees_{{ indicator.id }}{% endif %}" >
                         </td>
                     </tr>

@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect,Http404
 from django.urls import reverse
 from django.contrib import messages
+from django.contrib.auth.models import User
 from .models import *
 from django.conf import settings
 
@@ -117,11 +118,22 @@ def formreport_view(request):
 
     return render(request, 'formreport.html', context)
 
-
-
-
 def formreportuser_view(request):
-    return render(request,'formreportuser.html')
+    employee = Employee.objects.get(username=request.user)
+
+    # Get the list of work units for the current employee
+    result = Result.objects.filter(employee=employee)
+    
+       
+
+    context = {
+        'result': result,
+    }
+
+    return render(request, 'formreportuser.html', context)
+
+
+
 
 @login_required
 def report_view(request):

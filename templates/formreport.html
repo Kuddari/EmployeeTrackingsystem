@@ -27,16 +27,16 @@
                 <tbody>
                     {% for works in work_units %}
                     <tr>
-                        <td rowspan="{{ works.workname.indicator.count }}">{{ works.workname }}</td>
-                        <td>{{ works.workname.indicator.all.0 }}</td>
+                        <td rowspan="{{ works.indicator.count }}">{{ works.name }}</td>
+                        <td>{{ works.indicator.all.0 }}</td>
                         <td class="text-center w-50">
-                            <input type="number" value="{% if selected_position == 'Dean' %}{{ works.workname.indicator.all.0.unitsfordeans }}{% elif selected_position == 'Lecturer' %}{{ works.workname.indicator.all.0.unitsforlecturers }}{% elif selected_position == 'Researcher' %}{{ works.workname.indicator.all.0.unitsforemployees }}{% endif %}"
-                            name="{% if selected_position == 'Dean' %}unitsfordeans_{{ works.workname.indicator.all.0.id }}{% elif selected_position == 'Lecturer' %}unitsforlecturers_{{ works.workname.indicator.all.0.id }}{% elif selected_position == 'Researcher' %}unitsforemployees_{{ works.workname.indicator.all.0.id }}{% endif %}" >
+                            <input type="number" value="{% if selected_position == 'Dean' %}{{ works.indicator.all.0.unitsfordeans }}{% elif selected_position == 'Lecturer' %}{{ works.indicator.all.0.unitsforlecturers }}{% elif selected_position == 'Researcher' %}{{ works.indicator.all.0.unitsforemployees }}{% endif %}"
+                            name="{% if selected_position == 'Dean' %}unitsfordeans_{{ works.indicator.all.0.id }}{% elif selected_position == 'Lecturer' %}unitsforlecturers_{{ works.indicator.all.0.id }}{% elif selected_position == 'Researcher' %}unitsforemployees_{{ works.indicator.all.0.id }}{% endif %}" >
 
                         </td>
                         
                     </tr>
-                    {% for indicator in works.workname.indicator.all|slice:"1:" %}
+                    {% for indicator in works.indicator.all|slice:"1:" %}
 
                     <tr>
                         <td>{{ indicator }}</td>

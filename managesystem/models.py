@@ -6,7 +6,15 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Indicator(models.Model):
     indicator = models.TextField(default='None')
-    unitsfordeans = models.PositiveIntegerField(
+    unitsfordeansmin = models.PositiveIntegerField(
+        default=0,  # Set default value to 0
+        validators=[
+            MinValueValidator(0),  # Minimum value
+            MaxValueValidator(100)  # Maximum value (adjust as needed)
+        ]
+    )
+
+    unitsfordeansmax = models.PositiveIntegerField(
         default=0,  # Set default value to 0
         validators=[
             MinValueValidator(0),  # Minimum value

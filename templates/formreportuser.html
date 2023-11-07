@@ -38,12 +38,13 @@
                             <td class="text-center">{{works.work.workname.indicator.all.0.unitsforemployees}}</td>
                             {% endif %}
 
-                           <td>
-                                <input type="number" name="term1_{{works.id}}" value="{{works.term1}}">
+                            <td>
+                                <input type="number" name="term1_{{ works.id }}" value="{% if works.term1 == 0 %}0{% else %}{{ works.term1 }}{% endif %}">
                             </td>
                             <td>
-                                <input type="number" name="term2_{{works.id}}" value="{{works.term2}}">
+                                <input type="number" name="term2_{{ works.id }}" value="{% if works.term2 == 0 %}0{% else %}{{ works.term2 }}{% endif %}">
                             </td>
+                            
                         </tr>
                         {% for indicator in works.work.workname.indicator.all|slice:"1:" %}
                         <tr>
@@ -56,11 +57,11 @@
                             <td class="text-center">{{indicator.unitsforemployees}}</td>
                             {% endif %}
                             <td>
-                                <input type="number" name="term1_{{indicator.id}}" value="{{indicator.term1}}">
+                                <input type="number" name="term1_{{ works.id }}" value="{% if works.term1 == 0 %}0{% else %}{{ indicator.term1 }}{% endif %}">
                             </td>
                             <td>
-                                    <input type="number" name="term2_{{indicator.id}}"" value="{{indicator.term2}}">
-                                </td>
+                                <input type="number" name="term2_{{ works.id }}" value="{% if works.term2 == 0 %}0{% else %}{{ indicator.term2 }}{% endif %}">
+                            </td>
                         </tr>
                         {% endfor %}
 

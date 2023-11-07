@@ -108,7 +108,7 @@ def formreport_view(request):
         employees = Employee.objects.all()
     else:
         employees = Employee.objects.filter(position=selected_position)
-    work_units = WorkUnit.objects.filter(employee__in=employees)
+    work_units = Work.objects.all()
 
     context = {
         'employees': employees,
@@ -122,7 +122,7 @@ def formreportuser_view(request):
     employee = Employee.objects.get(username=request.user)
 
     # Get the list of work units for the current employee
-    result = Result.objects.filter(employee=employee)
+    result = WorkUnit.objects.filter(employee=employee)
     
        
 

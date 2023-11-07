@@ -49,7 +49,7 @@ class Employee(models.Model):
         ('Researcher', 'Researcher'),
     ]
     position = models.CharField(max_length=50, choices=POSITION_CHOICES)
-
+           
     def __str__(self):
         return f"{self.username}"
 
@@ -98,5 +98,63 @@ class Result(models.Model):
 class savedata (models.Model):
     username = models.ForeignKey(Result, on_delete=models.CASCADE)
     attachments = models.ManyToManyField(Attachment)
+
+
+####test model#########################################################################
+class Employeetest(models.Model):
+    username = models.ForeignKey(User, on_delete=models.CASCADE)
+    POSITION_CHOICES = [
+        ('Dean', 'Dean'),
+        ('Lecturer', 'Lecturer'),
+        ('Researcher', 'Researcher'),
+    ]
+    position = models.CharField(max_length=50, choices=POSITION_CHOICES)
+           
+    def __str__(self):
+        return f"{self.username}"
+    
+class Worktest(models.Model):
+    name = models.CharField(max_length=50) ### col for กิจกรรม
+    description = models.CharField(max_length=50) ### col for ตัวชี่วัด
+    score = models.PositiveIntegerField(default=0) ### คะแนนที่อาจารยจะใส่แต่ละเทอม
+    minunit = models.PositiveIntegerField(default=0) ### ค่าน้ำหนักตำ
+    maxunit = models.PositiveIntegerField(default=0) ### สูง
+    employeeposition = models.ForeignKey(Employeetest,on_delete=models.CASCADE) ### ตำแหน่ง
+
+
+class Resulttest(models.Model):
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    work = models.ForeignKey(Worktest, on_delete=models.CASCADE)
+    term1 = models.PositiveIntegerField(default=0)
+    term2 = models.PositiveIntegerField(default=0)
+    total = models.PositiveIntegerField(default=0)
+    attachments = models.ManyToManyField(Attachment, editable=False)
+
+    def save(self, *args, **kwargs):
+        # Calculate the total before saving
+        self.total = self.term1 + self.term2
+        super().save(*args, **kwargs)
+
+
+    def __str__(self):
+        return f"{self.employeetest} - {self.worktest}"
+    
+class File(models.Model):
+      title = models.CharField(max_length=255)
+      file = models.FileField(upload_to='documents/')
+      employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+      work = models.ForeignKey(Worktest, on_delete=models.CASCADE)
+      upload_time = models.DateTimeField(auto_now_add=True)
+
+
+
+
+
+
+
+
+
+
+
 
 

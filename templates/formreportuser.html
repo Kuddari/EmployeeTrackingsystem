@@ -26,46 +26,63 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for works in result %}
+                        {% for group_name, group_works in grouped_works.items %}
                         <tr>
-                            <td rowspan="{{ works.work.workname.indicator.count }}">{{ works.work.workname }}</td>
-                            <td> {{works.work.workname.indicator.all.0}} </td>
-                            {% if works.employee.position == 'Dean' %}
-                            <td class="text-center">{{works.work.workname.indicator.all.0.unitsfordeans}}</td>
-                            {% elif works.employee.position == 'Lecturer'  %}
-                            <td class="text-center">{{works.work.workname.indicator.all.0.unitsforlecturers}}</td>
-                            {% elif works.employee.position == 'Researcher'  %}
-                            <td class="text-center">{{works.work.workname.indicator.all.0.unitsforemployees}}</td>
-                            {% endif %}
+                            <td rowspan="{{ group_works|length }}">{{ group_name }}</td>
 
-                            <td>
-                                <input type="number" name="term1_{{ works.id }}" value="{% if works.term1 == 0 %}0{% else %}{{ works.term1 }}{% endif %}">
-                            </td>
-                            <td>
-                                <input type="number" name="term2_{{ works.id }}" value="{% if works.term2 == 0 %}0{% else %}{{ works.term2 }}{% endif %}">
-                            </td>
+                                {% if group_works.0.employee %}
+                                <td name="{{group_works.0.work.name.id}}">{{ group_works.0.work.name.description }}</td>
+                                {% else %}
+                                <td name="{{group_works.0.name.id}}">{{ group_works.0.name.description }}</td>
+                                {% endif %}
                             
-                        </tr>
-                        {% for indicator in works.work.workname.indicator.all|slice:"1:" %}
-                        <tr>
-                            <td>{{ indicator }}</td>
-                            {% if works.employee.position == 'Dean' %}
-                            <td class="text-center">{{indicator.unitsfordeans}}</td>
-                            {% elif works.employee.position == 'Lecturer'  %}
-                            <td class="text-center">{{indicator.unitsforlecturers}}</td>
-                            {% elif works.employee.position == 'Researcher'  %}
-                            <td class="text-center">{{indicator.unitsforemployees}}</td>
-                            {% endif %}
-                            <td>
-                                <input type="number" name="term1_{{ works.id }}" value="{% if works.term1 == 0 %}0{% else %}{{ indicator.term1 }}{% endif %}">
+                            
+                            <td class="text-center" style="width: 10%;">{%if group_works.0.employee %}
+                                ({{group_works.0.work.minunit}} - {{group_works.0.work.maxunit}})
+                                {% else %}
+                                ({{group_works.0.minunit}} - {{group_works.0.maxunit}})
+                                {% endif %}
                             </td>
+                                
                             <td>
-                                <input type="number" name="term2_{{ works.id }}" value="{% if works.term2 == 0 %}0{% else %}{{ indicator.term2 }}{% endif %}">
+                                <input class="text-center" type="number" value="{% if group_works.0.term1 > 0 %}{{ group_works.0.term1 }}{% else %}0{% endif %}" 
+                                name="{% if group_works.0.work.employee %}term1_{{ group_works.0.work.id }}{% else %}term1_{{ group_works.0.id }}{% endif %}">
+                            </td>
+                            <td class="text-center">
+                                <input class="text-center" type="number" value="{% if group_works.0.term2 > 0 %}{{ group_works.0.term2 }}{% else %}0{% endif %}" 
+                                name="{% if group_works.0.work.employee %}term2_{{ group_works.0.work.id }}{% else %}term2_{{ group_works.0.id }}{% endif %}">
                             </td>
                         </tr>
-                        {% endfor %}
+                        
+                           
+                        
+                            {% for work in group_works|slice:"1:" %}
+                                    <tr>
+                                        {% if work.work.name %}
+                                        <td>{{ work.work.name.description }}</td>
+                                            {% else %}
+                                            <td>{{ work.name.description }}</td>
+                                            {% endif %}
 
-                    {% endfor %}
+                                            <td class="text-center" style="width: 10%;">
+                                                {% if work.work.name %}
+                                                ({{work.work.minunit}} - {{work.work.maxunit}})
+                                                {% else %}
+                                                ({{work.minunit}} - {{work.maxunit}})
+                                                {% endif %}
+                                            </td>
+                                        <td>
+
+                                            <input class="text-center" type="number" value="{% if work.term1 > 0 %}{{ work.term1 }}{% else %}0{% endif %}" 
+                                            name="{% if work.work.employee %}term1_{{work.name.id}}{% else %}term1_{{work.id}}{% endif %}">
+                                        </td>
+                                        <td>
+                                            <input class="text-center" type="number" value="{% if work.term2 > 0 %}{{ work.work.term2 }}{% else %}0{% endif %}" 
+                                            name="{% if work.work.employee %}term2_{{work.name.id}}{% else %}term2_{{work.id}}{% endif %}">
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% endfor %}
                     
                             </tbody>
                         </table>

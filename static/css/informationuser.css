@@ -1,4 +1,4 @@
-h1, h2, h3, h4, h5, h6, p, a {
+h1, h2, h3, h4, h5, h6, p, a,th ,td {
     color: #00509D;
 }
 
@@ -45,18 +45,46 @@ h1, h2, h3, h4, h5, h6, p, a {
     display: none;
 }
 
+.hidden-box {
+    display: none;
+    position: fixed;
+    width: auto;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+    backdrop-filter: blur(5px); /* Apply blur effect to the background */
+}
 
+.hidden-box table {
+    width: 100%;
+}
+
+.hidden-box th, .hidden-box td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+.hidden-box td.description {
+    text-align: left; /* Align text to the left for the description column */
+}
 
 
 
 
 @media (max-width: 992px) {
     .row .h4 {
-        font-size: 16px;
+        font-size: 14px;
         font-weight: bold;
     }
     .row .h5 {
-        font-size: 16px;
+        font-size: 14px;
         font-weight: bold;
     }
     .save-data {
@@ -64,11 +92,19 @@ h1, h2, h3, h4, h5, h6, p, a {
         margin-top: -6.5px;
     }
 
+    .hidden-box {
+       width: 90%;
+       height: auto;
+    }
+
+
 }
+
+
 
 @media (max-width: 600px) {
     .row .h4 {
-        font-size: 13px;
+        font-size: 12px;
         font-weight: bold;
     }
 
@@ -76,12 +112,12 @@ h1, h2, h3, h4, h5, h6, p, a {
         padding-right: 15px;
     }
     .row .h5 {
-        font-size: 13px;
+        font-size: 12px;
         font-weight: bold;
     }
 
     .background {
-        padding-top: 8px;
+        padding-top: 9px;
         margin: 1px;
     }
 
@@ -97,8 +133,12 @@ h1, h2, h3, h4, h5, h6, p, a {
     }
 
     .save-data {
-        font-size: 18px;
-        margin-top: -5px;
+        margin-top: -8px;
     }
+
+    .hidden-box {
+        width: 90%;
+        height: auto;
+     }
 
 }

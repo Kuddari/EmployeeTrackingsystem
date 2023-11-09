@@ -122,7 +122,7 @@ class Employee(models.Model):
         return f"{self.username.first_name} {self.username.last_name} - {self.position}"
     
 class Work(models.Model):
-    name = models.CharField(max_length=50) ### col for กิจกรรม
+    name = models.CharField(max_length=100) ### col for กิจกรรม
     description = models.TextField() ### col for ตัวชี่วัด
 
     def __str__(self):
@@ -147,14 +147,13 @@ class Result(models.Model):
     work = models.ForeignKey(Setunit, on_delete=models.CASCADE)
     term1 = models.PositiveIntegerField(default=0)
     term2 = models.PositiveIntegerField(default=0)
-    # total = models.PositiveIntegerField(default=0)
-    # result = models.PositiveIntegerField(default=0)
-    # attachments = models.ManyToManyField(Attachment, editable=False)
+    total = models.PositiveIntegerField(default=0)
+    result = models.PositiveIntegerField(default=0)
 
-    # def save(self, *args, **kwargs):
-    #     # Calculate the total before saving
-    #     self.total = self.term1 + self.term2
-    #     super().save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        # Calculate the total before saving
+        self.total = self.term1 + self.term2
+        super().save(*args, **kwargs)
 
 
     def __str__(self):

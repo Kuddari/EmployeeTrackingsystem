@@ -11,18 +11,17 @@
 </head>
 <body>
 
-    {{user}}
+    
     <div class="container text-center">
-        <h2 class="name">Sulaiman Charaae</h2>
+        <h2 class="name">{{user.first_name}} {{user.last_name}}</h2>
         <img class="images" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdfcTjke0ma-YjGc4jtV2nnwcarM9Mw045WA&usqp=CAU" alt="80*80">
     
         <div class="row mt-4">
-            <div class="col-1 d-flex justify-content-start">
-            </div>
+            
             <div class="col-6">
-                <p class="h4 d-flex justify-content-start">รายการ</p>
+                <p class="h4 d-flex justify-content-center">รายการ</p>
             </div>
-            <div class="col-1 d-flex justify-content-center">
+            <div class="col-2 d-flex justify-content-center">
                 <p class="h4">เกณฑ์</p>
             </div>
             <div class="col-1 d-flex justify-content-center">
@@ -34,26 +33,55 @@
             <div class="col-1 d-flex justify-content-center">
                 <p class="h4 pad">รวม</p>
             </div>
-        </div>
 
-        <div class="row background">
-            <div class="col-1 d-flex justify-content-start">
-                <p class="h5">1.</p>
+        </div>
+        {% for group_name, group_works in grouped_works.items %}
+        <div class="row background mb-4">
+            <div class="col-6 d-flex justify-content-start mt-2">
+                <a href="#" class="save-data" onclick="toggleBox('{{ group_works.0.id }}'); return false;">
+                    <p class="h5">{{ group_name }}</p>
+                </a>
             </div>
-            <div class="col-6 d-flex justify-content-start">
-                <p class="h5">งานวิจัยสาขาวิทยาศาสตร์</p>
+            
+            <div id="hiddenBox{{ group_works.0.id }}" class="hidden-box">
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="close" onclick="toggleBox('{{ group_works.0.id }}')">X</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>รายการ</th>
+                            <th>เกณฑ์</th>
+                            <th>เทอม1</th>
+                            <th>เทอม2</th>
+                            <th>รวม</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for work in group_works %}
+                            <tr>
+                                <td class="description">{{ work.work.name.description }}</td>
+                                <td>({{ work.work.minunit }} - {{ work.work.maxunit }})</td>
+                                <td>{{ work.term1 }}</td>
+                                <td>{{ work.term2 }}</td>
+                                <td>{{ work.total }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="col-2 d-flex justify-content-center">
+                <p class="h5">({{group_works.0.work.minunit}} - {{group_works.0.work.maxunit}})</p>
             </div>
             <div class="col-1 d-flex justify-content-center">
-                <p class="h5">20</p>
+                <p class="h5">{{ group_works.0.term1 }}</p>
             </div>
             <div class="col-1 d-flex justify-content-center">
-                <p class="h5">5</p>
+                <p class="h5">{{group_works.0.term2}}</p>
             </div>
             <div class="col-1 d-flex justify-content-center">
-                <p class="h5">0</p>
-            </div>
-            <div class="col-1 d-flex justify-content-center">
-                <p class="h5">0</p>
+                <p class="h5">{{group_works.0.total}}</p>
             </div>
             <div class="col-1 d-flex justify-content-center">
                 <a href="#" class="save-data" onclick="document.getElementById('fileInput').click(); return false;">
@@ -62,8 +90,30 @@
                 <input type="file" id="fileInput" class="hidden-input" />
             </div>
         </div>
+        {% endfor %}
     </div>
     
+
+    <script>
+    function closeBox(groupId) {
+        var hiddenBox = $('#hiddenBox' + groupId);
+        hiddenBox.hide();
+    }
+
+// JavaScript function to toggle the visibility of the selected box
+        function toggleBox(groupId) {
+            // Close the selected box if it's already open
+            if ($('#hiddenBox' + groupId).is(':visible')) {
+                closeBox(groupId);
+            } else {
+                // Close all other open boxes
+                $('.hidden-box').not('#hiddenBox' + groupId).hide();
+                // Toggle the visibility of the selected box
+                var hiddenBox = $('#hiddenBox' + groupId);
+                hiddenBox.toggle();
+        }
+    }
+    </script>
 
     
 

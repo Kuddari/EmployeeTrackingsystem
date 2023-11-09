@@ -71,8 +71,14 @@ def informationstaff_view(request):
 
 @login_required
 def informationuser_view(request):
-    
-    return render(request, "informationuser.html")
+    result = Result.objects.all()
+    grouped_works = {key: list(group) for key, group in itertools.groupby(result, key=lambda x: x.work.name.name)}
+
+    context = {
+        'grouped_works' : grouped_works
+    }
+
+    return render(request, "informationuser.html", context)
 
 @login_required
 def formreport_view(request):
@@ -130,9 +136,12 @@ def formreport_view(request):
 
 def formreportuser_view(request):
     employee = Employee.objects.get(username=request.user)
-    works = Result.objects.filter(employee=employee)
+    results = Result.objects.filter(employee=employee)
+    works = []
+    total = 0
+    result = 0
     
-    if works:
+    if results:
         works = Result.objects.filter(employee=employee)
         grouped_works = {key: list(group) for key, group in itertools.groupby(works, key=lambda x: x.work.name.name)}
     else:
@@ -145,7 +154,11 @@ def formreportuser_view(request):
             for work in group_works:
                 term1 = request.POST.get(f'term1_{work.id}')
                 term2 = request.POST.get(f'term2_{work.id}')
-                if works:
+                term1 = int(term1) if term1.isdigit() else 0
+                term2 = int(term2) if term2.isdigit() else 0
+                total = term1 + term2
+                
+                if results:
                     userresult, created = Result.objects.get_or_create(employee=employee, work=work.work)
                 else:
                     userresult, created = Result.objects.get_or_create(employee=employee, work=work)
@@ -154,6 +167,9 @@ def formreportuser_view(request):
                 # Update or create minunit and maxunit values
                 userresult.term1 = term1
                 userresult.term2 = term2
+                userresult.total = total
+                userresult.total = total
+
                 userresult.save()
 
         return HttpResponseRedirect(reverse('informationuser'))

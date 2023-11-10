@@ -61,7 +61,7 @@
                         {% for work in group_works %}
                             <tr>
                                 <td class="description">{{ work.work.name.description }}</td>
-                                <td>({{ work.work.minunit }} - {{ work.work.maxunit }})</td>
+                                <td style="width: 20%;">({{ work.work.minunit }} - {{ work.work.maxunit }})</td>
                                 <td>{{ work.term1 }}</td>
                                 <td>{{ work.term2 }}</td>
                                 <td>{{ work.total }}</td>
@@ -91,9 +91,17 @@
             </div>
         </div>
         {% endfor %}
-    </div>
     
-
+        <div class="row">
+            <div class="col-6"></div>
+            <div class="col-3">
+                <a class="h3 d-flex justify-content-center mt-1 color" href="{% url 'report' user.id %}">รายละเอียดงาน</a>
+            </div>
+            <div class="col-3">
+                <a class="h3 d-flex justify-content-center mt-1 color" href="{% url 'formreportuser' %}">กำหนดเกณฑ์</a>
+            </div>
+        </div>
+    </div>
     <script>
     function closeBox(groupId) {
         var hiddenBox = $('#hiddenBox' + groupId);

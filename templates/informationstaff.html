@@ -12,10 +12,12 @@
 <body>
    
     <div class="container">
-        {% for text in employees %}
         <div class="row mt-4">
             <div class="col-6 col-lg-6 d-flex justify-content-start">
-                <h2 class="color">{{text.position}}</h2>
+                
+                <h2 class="color">{{ position }}</h2>
+             
+
             </div>
             <div class="col-6 col-lg-6 d-flex justify-content-end">
                 <a id="formreport-link" class="h2 color1" href="{% url 'formreport' %}">กำหนดเกณฑ์</a>
@@ -24,9 +26,10 @@
             
            
         </div>
+        {% for text in employees %}
         <div class="row mt-5 infor">
             <div class="col-1 d-flex justify-content-center">
-                <h3 class="mt-1">1.</h3>
+                <h3 class="mt-1 dynamicNumber">1.</h3>
             </div>
 
             <div class="col-2 d-flex justify-content">
@@ -37,13 +40,13 @@
             </div>
             
             <div class="col-4">
-                <a class="h3 d-flex justify-content-end mt-1" href="">รายละเอียดงาน</a>
+                <a class="h3 d-flex justify-content-end mt-1" href="{% url 'report' text.id %}">รายละเอียดงาน</a>
             </div>
            
         </div>
         {% endfor %}
     </div>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const formReportLink = document.getElementById('formreport-link');
@@ -55,6 +58,17 @@
                 window.location.href = newURL; // Redirect to the new URL
             });
         });
+        </script>
+        
+        <script>
+            // Use JavaScript to dynamically increment the number for each row
+            $(document).ready(function () {
+                // Select all elements with the class 'dynamicNumber' and iterate over them
+                $('.dynamicNumber').each(function (index) {
+                    // Update the content of each element with the incremented number
+                    $(this).text((index + 1) + ".");
+                });
+            });
         </script>
         
     

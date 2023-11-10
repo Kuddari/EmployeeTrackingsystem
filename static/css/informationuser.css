@@ -74,7 +74,14 @@ h1, h2, h3, h4, h5, h6, p, a,th ,td {
 .hidden-box td.description {
     text-align: left; /* Align text to the left for the description column */
 }
-
+.color {
+    font-size: 20px;
+    text-decoration: none;
+    background-color: #D7E3FC;
+    border-radius: 50px;
+    padding: 10px 20px;
+    border: 3px solid #00509D;
+}
 
 
 
@@ -97,7 +104,11 @@ h1, h2, h3, h4, h5, h6, p, a,th ,td {
        height: auto;
     }
 
-
+    .color {
+        font-size: 18px;
+        padding: 5px 10px;
+       
+    }
 }
 
 
@@ -141,4 +152,9 @@ h1, h2, h3, h4, h5, h6, p, a,th ,td {
         height: auto;
      }
 
+    .color {
+        font-size: 14px;
+        padding: 5px 8px;
+       
+    }
 }

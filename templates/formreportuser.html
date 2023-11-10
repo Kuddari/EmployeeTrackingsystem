@@ -11,7 +11,7 @@
 <body>
     <div class="container mt-5">
 
-        <h3 class="text-center mb-4">กรอกเทอม</h3>
+        <h3 class="text-center mb-4 name">กรอกเทอม</h3>
         <div class="table-responsive">
             <form action="" method="POST">
                 {% csrf_token %}
@@ -37,18 +37,18 @@
                                 {% endif %}
                             
                             
-                            <td class="text-center" style="width: 10%;">{%if group_works.0.employee %}
+                            <td class="text-center align-middle" style="width: 10%;">{%if group_works.0.employee %}
                                 ({{group_works.0.work.minunit}} - {{group_works.0.work.maxunit}})
                                 {% else %}
                                 ({{group_works.0.minunit}} - {{group_works.0.maxunit}})
                                 {% endif %}
                             </td>
                                 
-                            <td>
+                            <td class="align-middle">
                                 <input class="text-center" type="number" value="{% if group_works.0.term1 > 0 %}{{ group_works.0.term1 }}{% else %}0{% endif %}" 
                                 name="{% if group_works.0.work.employee %}term1_{{ group_works.0.work.id }}{% else %}term1_{{ group_works.0.id }}{% endif %}">
                             </td>
-                            <td class="text-center">
+                            <td class="text-center align-middle">
                                 <input class="text-center" type="number" value="{% if group_works.0.term2 > 0 %}{{ group_works.0.term2 }}{% else %}0{% endif %}" 
                                 name="{% if group_works.0.work.employee %}term2_{{ group_works.0.work.id }}{% else %}term2_{{ group_works.0.id }}{% endif %}">
                             </td>
@@ -64,20 +64,20 @@
                                             <td>{{ work.name.description }}</td>
                                             {% endif %}
 
-                                            <td class="text-center" style="width: 10%;">
+                                            <td class="text-center align-middle" style="width: 10%;">
                                                 {% if work.work.name %}
                                                 ({{work.work.minunit}} - {{work.work.maxunit}})
                                                 {% else %}
                                                 ({{work.minunit}} - {{work.maxunit}})
                                                 {% endif %}
                                             </td>
-                                        <td>
 
+                                        <td class="align-middle">
                                             <input class="text-center" type="number" value="{% if work.term1 > 0 %}{{ work.term1 }}{% else %}0{% endif %}" 
                                             name="{% if work.work.employee %}term1_{{work.name.id}}{% else %}term1_{{work.id}}{% endif %}">
                                         </td>
-                                        <td>
-                                            <input class="text-center" type="number" value="{% if work.term2 > 0 %}{{ work.work.term2 }}{% else %}0{% endif %}" 
+                                        <td class="align-middle">
+                                            <input class="text-center" type="number" value="{% if work.term2 > 0 %}{{ work.term2 }}{% else %}0{% endif %}" 
                                             name="{% if work.work.employee %}term2_{{work.name.id}}{% else %}term2_{{work.id}}{% endif %}">
                                         </td>
                                     </tr>

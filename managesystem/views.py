@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login,authenticate
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect,Http404
 from django.urls import reverse
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponse, HttpResponseRedirect,Http404
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import *
@@ -53,9 +54,7 @@ def selectfilter_view(request):
 
 @login_required
 def informationstaff_view(request):
-    # Get the position query parameter from the URL
     selected_position = request.GET.get('position', None)
-
     if selected_position is None:
         # If no query parameter is provided, show all employees
         employees = Employee.objects.all()
@@ -63,8 +62,10 @@ def informationstaff_view(request):
         # Filter employees based on the query parameter
         employees = Employee.objects.filter(position=selected_position)
 
+
     context = {
         "employees": employees,
+        'position' : selected_position
     }
 
     return render(request, "informationstaff.html", context)
@@ -176,12 +177,22 @@ def formreportuser_view(request):
     
     context = {
         'grouped_works': grouped_works,
+        'employee': employee
     }
     return render(request, 'formreportuser.html', context)
 
 
 @login_required
-def report_view(request):
-    
-    return render(request, "report.html")
-    
+def report_view(request, employee_id):
+    # Get the employee based on the provided employee_id
+    employee = get_object_or_404(Employee, id=employee_id)
+    results = Result.objects.filter(employee=employee)
+
+    # Assuming you want to group by work name
+    grouped_works = {key: list(group) for key, group in itertools.groupby(results, key=lambda x: x.work.name.name)}
+
+    context = {
+        'grouped_works': grouped_works,
+        'results': results,
+    }
+    return render(request, "report.html", context)

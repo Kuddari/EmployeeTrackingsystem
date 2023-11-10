@@ -32,15 +32,15 @@
         <tr>
             <td rowspan="{{ group_works|length }}">{{ group_name }}</td>
             {% if group_works.0.name.name %}
-            <td>{{ group_works.0.name.description }}</td>
+            <td >{{ group_works.0.name.description }}</td>
                 {% else %}
             <td>{{ group_works.0.description }}</td>
                 {% endif %}
-            <td>
+            <td class="align-middle">
                 <input class="text-center" type="number" value="{% if group_works.0.minunit > 0 %}{{ group_works.0.minunit }}{% else %}0{% endif %}" 
                 name="{% if group_works.0.name %}minunit_{{ group_works.0.id }}{% else %}minunit_{{ group_works.0.name.id }}{% endif %}">
             </td>
-            <td>
+            <td class="align-middle">
                 <input class="text-center" type="number" value="{% if group_works.0.maxunit > 0 %}{{ group_works.0.maxunit }}{% else %}0{% endif %}" 
                 name="{% if group_works.0.name %}maxunit_{{ group_works.0.id }}{% else %}maxunit_{{group_works.0.name.id}}{% endif %}">
             </td>
@@ -48,15 +48,15 @@
         {% for work in group_works|slice:"1:" %}
         <tr>
             {% if work.name.name %}
-            <td>{{ work.name.description }}</td> 
+            <td >{{ work.name.description }}</td> 
                 {% else %}
                 <td>{{ work.description }}</td>
                 {% endif %}
-            <td>
+            <td class="align-middle">
                 <input class="text-center" type="number" value="{% if work.minunit > 0 %}{{ work.minunit }}{% else %}0{% endif %}" 
                 name="{% if work.name %}minunit_{{work.id}}{% else %}minunit_{{work.name.id}}{% endif %}">
             </td>
-            <td>
+            <td class="align-middle">
                 <input class="text-center" type="number" value="{% if work.maxunit > 0 %}{{ work.maxunit }}{% else %}0{% endif %}" 
                 name="{% if work.name %}maxunit_{{work.id}}{% else %}maxunit_{{work.name.id}}{% endif %}">
             </td>

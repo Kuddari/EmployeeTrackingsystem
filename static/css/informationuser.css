@@ -74,6 +74,30 @@ h1, h2, h3, h4, h5, h6, p, a,th ,td {
 .hidden-box td.description {
     text-align: left; /* Align text to the left for the description column */
 }
+
+.hidden-box .hidden-file {
+    display: none;
+    position: fixed;
+    width: 30%;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+    backdrop-filter: blur(5px); /* Apply blur effect to the background */
+}
+
+.hidden-box .hidden-file .choose-file {
+    margin: 10px;
+    border-bottom: 2px solid #00509D;
+    padding-bottom: 13px;
+}
+
+
 .color {
     font-size: 20px;
     text-decoration: none;

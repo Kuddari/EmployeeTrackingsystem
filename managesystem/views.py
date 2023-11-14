@@ -70,13 +70,22 @@ def informationstaff_view(request):
 
     return render(request, "informationstaff.html", context)
 
-@login_required
 def informationuser_view(request):
+    if request.method == 'POST' and request.FILES:
+        file = request.FILES['file']  # Accessing the uploaded file from the form
+
+        # Save the file to the database
+        file_model = File.objects.create(file=file) 
+        file_model.save()
+
+        messages.success(request, 'File saved successfully!')
+        return HttpResponseRedirect(reverse('informationuser'))
+
     result = Result.objects.all()
     grouped_works = {key: list(group) for key, group in itertools.groupby(result, key=lambda x: x.work.name.name)}
 
     context = {
-        'grouped_works' : grouped_works
+        'grouped_works': grouped_works
     }
 
     return render(request, "informationuser.html", context)

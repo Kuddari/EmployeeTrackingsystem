@@ -48,10 +48,11 @@
                                 <input class="text-center" type="number" value="{% if group_works.0.term1 > 0 %}{{ group_works.0.term1 }}{% else %}0{% endif %}" 
                                 name="{% if group_works.0.work.employee %}term1_{{ group_works.0.work.id }}{% else %}term1_{{ group_works.0.id }}{% endif %}">
                             </td>
-                            <td class="text-center align-middle">
+                            <td id="sem2Cell" data-id="{{ group_works.0.work.id }}" class="text-center align-middle">
                                 <input class="text-center" type="number" value="{% if group_works.0.term2 > 0 %}{{ group_works.0.term2 }}{% else %}0{% endif %}" 
                                 name="{% if group_works.0.work.employee %}term2_{{ group_works.0.work.id }}{% else %}term2_{{ group_works.0.id }}{% endif %}">
                             </td>
+                            
                         </tr>
                         
                            
@@ -72,14 +73,15 @@
                                                 {% endif %}
                                             </td>
 
-                                        <td class="align-middle">
+                                        <td  class="align-middle">
                                             <input class="text-center" type="number" value="{% if work.term1 > 0 %}{{ work.term1 }}{% else %}0{% endif %}" 
                                             name="{% if work.work.employee %}term1_{{work.name.id}}{% else %}term1_{{work.id}}{% endif %}">
                                         </td>
-                                        <td class="align-middle">
+                                        <td id="sem2Cell" data-id="{{ work.work.id }}" class="align-middle">
                                             <input class="text-center" type="number" value="{% if work.term2 > 0 %}{{ work.term2 }}{% else %}0{% endif %}" 
-                                            name="{% if work.work.employee %}term2_{{work.name.id}}{% else %}term2_{{work.id}}{% endif %}">
+                                            name="{% if work.work.employee %}term2_{{ work.work.id }}{% else %}term2_{{ work.id }}{% endif %}">
                                         </td>
+                                        
                                     </tr>
                                     {% endfor %}
                                     {% endfor %}
@@ -96,29 +98,28 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', function () {
-                const sem2Header = document.getElementById('sem2Header');
-                const sem2Cell = document.getElementById('sem2Cell');
-        
-                // Retrieve the state from Local Storage
-                let isColumnVisible = localStorage.getItem('isColumnVisible') === 'true';
-        
-                // Function to toggle the column visibility
-                const toggleColumn = () => {
-                    if (isColumnVisible) {
-                        // Show เทอม 2
-                        sem2Header.style.display = '';
-                        sem2Cell.style.display = '';
-                    } else {
-                        // Hide เทอม 2
-                        sem2Header.style.display = 'none';
-                        sem2Cell.style.display = 'none';
-                    }
-                };
-        
-                console.log('isColumnVisible:', isColumnVisible);
-        
-                toggleColumn();
-            });
+            const sem2Header = document.getElementById('sem2Header');
+            const sem2Cell = document.querySelectorAll('[id^="sem2Cell"]'); // Select all elements with ID starting with 'sem2Cell'
+
+            let isColumnVisible = localStorage.getItem('isColumnVisible') === 'true';
+
+            const toggleColumn = () => {
+                if (isColumnVisible) {
+                    sem2Header.style.display = '';
+                    sem2Cell.forEach(cell => {
+                        cell.style.display = '';
+                    });
+                } else {
+                    sem2Header.style.display = 'none';
+                    sem2Cell.forEach(cell => {
+                        cell.style.display = 'none';
+                    });
+                }
+            };
+
+            toggleColumn();
+        });
+
         </script>
 </body>
 </html>

@@ -8,6 +8,8 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/informationuser.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+
+    
 </head>
 <body>
 
@@ -18,7 +20,7 @@
     
         <div class="row mt-4">
             
-            <div class="col-6">
+            <div class="col-7">
                 <p class="h4 d-flex justify-content-center">รายการ</p>
             </div>
             <div class="col-2 d-flex justify-content-center">
@@ -37,7 +39,7 @@
         </div>
         {% for group_name, group_works in grouped_works.items %}
         <div class="row background mb-4">
-            <div class="col-6 d-flex justify-content-start mt-2">
+            <div class="col-7 d-flex justify-content-start mt-2">
                 <a href="#" class="save-data" onclick="toggleBox('{{ group_works.0.id }}'); return false;">
                     <p class="h5">{{ group_name }}</p>
                 </a>
@@ -55,6 +57,7 @@
                             <th>เทอม1</th>
                             <th>เทอม2</th>
                             <th>รวม</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -65,12 +68,35 @@
                                 <td>{{ work.term1 }}</td>
                                 <td>{{ work.term2 }}</td>
                                 <td>{{ work.total }}</td>
-                            </tr>
-                        {% endfor %}
+                                <td>
+                                    <a href="#" class="save-data" onclick="toggleFile('{{ work.work.id }}'); return false;">
+                                        <i class="fas fa-save"></i>
+                                    </a>
+                                </td>
+                                <form action="" method="POST">
+                                    {% csrf_token %}
+                                    <div id="hidden-file-{{ work.work.id }}" class="hidden-file">
+                                        <div class="d-flex justify-content-end">
+                                            <button type="button" class="close" onclick="closeFile('{{ work.work.id }}')">X</button>
+                                        </div>
+                                        <div id="file-uploads-{{ work.work.id }}">
+                                            <label for="fileInput-{{ work.work.id }}-1" class="choose-file">เลือกไฟล์</label>
+                                            <input type="file" id="fileInput-{{ work.work.id }}-1" class="hidden-input" onchange="updateFileName(this,'{{ work.work.id }}-1')" />
+                                        </div>
+                                        <button type="button" onclick="addFileUpload('{{ work.work.id }}')">&plus;</button>
+                                        <div class="d-flex justify-content-end">
+                                        <button type="submit">ยืนยัน</button>
+                                    </div>
+                                    </div>
+                                </form>
+                                
+                                
+                        </tr>
+
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>
-            
             <div class="col-2 d-flex justify-content-center">
                 <p class="h5">({{group_works.0.work.minunit}} - {{group_works.0.work.maxunit}})</p>
             </div>
@@ -83,12 +109,7 @@
             <div class="col-1 d-flex justify-content-center">
                 <p class="h5">{{group_works.0.total}}</p>
             </div>
-            <div class="col-1 d-flex justify-content-center">
-                <a href="#" class="save-data" onclick="document.getElementById('fileInput').click(); return false;">
-                    <i class="fas fa-save"></i>
-                </a>
-                <input type="file" id="fileInput" class="hidden-input" />
-            </div>
+            
         </div>
         {% endfor %}
     
@@ -103,25 +124,76 @@
         </div>
     </div>
     <script>
-    function closeBox(groupId) {
-        var hiddenBox = $('#hiddenBox' + groupId);
-        hiddenBox.hide();
-    }
-
-// JavaScript function to toggle the visibility of the selected box
+        function closeBox(groupId) {
+            var hiddenBox = $('#hiddenBox' + groupId);
+            hiddenBox.hide();
+        }
+    
         function toggleBox(groupId) {
-            // Close the selected box if it's already open
             if ($('#hiddenBox' + groupId).is(':visible')) {
                 closeBox(groupId);
             } else {
-                // Close all other open boxes
                 $('.hidden-box').not('#hiddenBox' + groupId).hide();
-                // Toggle the visibility of the selected box
                 var hiddenBox = $('#hiddenBox' + groupId);
                 hiddenBox.toggle();
+            }
+        }
+    
+        </script>
+
+<script>
+    // JavaScript functions for toggling the file box
+    function closeFile(workId) {
+        var fileBox = document.getElementById('hidden-file-' + workId);
+        fileBox.style.display = 'none';
+    }
+
+    function toggleFile(workId) {
+        var fileBox = document.getElementById('hidden-file-' + workId);
+        if (fileBox.style.display === 'block') {
+            closeFile(workId);
+        } else {
+            var allFileBoxes = document.getElementsByClassName('hidden-file');
+            for (var i = 0; i < allFileBoxes.length; i++) {
+                allFileBoxes[i].style.display = 'none';
+            }
+            fileBox.style.display = 'block';
         }
     }
-    </script>
+</script>
+
+<script>
+    let fileCounter = 1;
+
+    function addFileUpload(workId) {
+        fileCounter++;
+        const fileContainer = document.getElementById(`file-uploads-${workId}`);
+        const newDiv = document.createElement('div'); // Create a new div for each added row
+        newDiv.classList.add('file-row'); // Apply a class to the new div
+
+        const newLabel = document.createElement('label');
+        newLabel.setAttribute('for', `fileInput-${workId}-${fileCounter}`);
+        newLabel.classList.add('choose-file');
+        newLabel.textContent = 'เลือกไฟล์';
+
+        const newInput = document.createElement('input');
+        newInput.type = 'file';
+        newInput.id = `fileInput-${workId}-${fileCounter}`;
+        newInput.classList.add('hidden-input');
+        newInput.setAttribute('onchange', `updateFileName(this, '${workId}-${fileCounter}')`);
+
+        newDiv.appendChild(newLabel);
+        newDiv.appendChild(newInput);
+        fileContainer.appendChild(newDiv);
+    }
+
+    function updateFileName(input, labelId) {
+        const fileLabel = document.querySelector(`label[for="fileInput-${labelId}"]`);
+        fileLabel.textContent = input.files[0].name;
+    }
+</script>
+
+
 
     
 

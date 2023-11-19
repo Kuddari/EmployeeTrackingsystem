@@ -149,6 +149,8 @@ class Result(models.Model):
     term2 = models.PositiveIntegerField(default=0)
     total = models.PositiveIntegerField(default=0)
     result = models.PositiveIntegerField(default=0)
+    file = models.FileField(upload_to='documents/')
+    # upload_time = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         # Calculate the total before saving
@@ -159,12 +161,15 @@ class Result(models.Model):
     def __str__(self):
         return f"{self.employee} - {self.work}"
     
-class File(models.Model):
-    #   title = models.CharField(max_length=255)
-      file = models.FileField(upload_to='documents/')
-      employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-      work = models.ForeignKey(Work, on_delete=models.CASCADE)
-      upload_time = models.DateTimeField(auto_now_add=True)
+# class File(models.Model):
+#     #   title = models.CharField(max_length=255)
+#       file = models.FileField(upload_to='documents/')
+#       employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+#       work = models.ForeignKey(Work, on_delete=models.CASCADE)
+#       upload_time = models.DateTimeField(auto_now_add=True)
+
+#       def __str__(self):
+#         return f"{self.upload_time} {self.employee} - {self.work} - {self.file}"
 
 
 

@@ -3,11 +3,12 @@ from django.contrib.auth import login,authenticate
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect,Http404
+from django.http import HttpResponse, HttpResponseRedirect,Http404,HttpResponseBadRequest
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import *
 import itertools
+
 
 
 def login_view(request):
@@ -71,24 +72,41 @@ def informationstaff_view(request):
     return render(request, "informationstaff.html", context)
 
 def informationuser_view(request):
+    employee = Employee.objects.get(username=request.user)
+    results = Result.objects.all()
+    
+    grouped_works = {key: list(group) for key, group in itertools.groupby(results, key=lambda x: x.work.name.name)}
+    
     if request.method == 'POST' and request.FILES:
-        file = request.FILES['file']  # Accessing the uploaded file from the form
+        for result in results:
+            file_input_name = f'fileInput-{result.id}'
+            if file_input_name in request.FILES:
+                file = request.FILES[file_input_name]
 
-        # Save the file to the database
-        file_model = File.objects.create(file=file) 
-        file_model.save()
+                # Validate file extension
+                if not file.name.endswith('.zip'):
+                    return HttpResponseBadRequest("Invalid file format. Please upload a ZIP file.")
+                # Try to get an existing Result record
+                existing_result = Result.objects.filter(employee=employee, work=result.work).first()
 
-        messages.success(request, 'File saved successfully!')
+                if existing_result:
+                    # Update the existing record
+                    existing_result.file = file
+                    existing_result.save()
+                else:
+                    # Create a new record
+                    new_result = Result.objects.create(employee=employee, work=result.work, file=file)
+                    new_result.save()
+               
         return HttpResponseRedirect(reverse('informationuser'))
 
-    result = Result.objects.all()
-    grouped_works = {key: list(group) for key, group in itertools.groupby(result, key=lambda x: x.work.name.name)}
-
     context = {
-        'grouped_works': grouped_works
+        'grouped_works': grouped_works,
+        'results': results,
     }
 
     return render(request, "informationuser.html", context)
+
 
 @login_required
 def formreport_view(request):

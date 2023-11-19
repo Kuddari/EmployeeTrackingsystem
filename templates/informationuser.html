@@ -12,8 +12,10 @@
     
 </head>
 <body>
-
     
+    {% for file in files %}
+    {{file.file}}
+    {% endfor %}
     <div class="container text-center">
         <h2 class="name">{{user.first_name}} {{user.last_name}}</h2>
         <img class="images" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdfcTjke0ma-YjGc4jtV2nnwcarM9Mw045WA&usqp=CAU" alt="80*80">
@@ -62,8 +64,10 @@
                     </thead>
                     <tbody>
                         {% for work in group_works %}
+                        <form action="" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
                             <tr>
-                                <td class="description">{{ work.work.name.description }}</td>
+                                <td class="description" name="description-{{work.id}}">{{ work.work.name.description }}</td>
                                 <td style="width: 20%;">({{ work.work.minunit }} - {{ work.work.maxunit }})</td>
                                 <td>{{ work.term1 }}</td>
                                 <td>{{ work.term2 }}</td>
@@ -73,26 +77,41 @@
                                         <i class="fas fa-save"></i>
                                     </a>
                                 </td>
-                                <form action="" method="POST">
-                                    {% csrf_token %}
+                               
+                                    
                                     <div id="hidden-file-{{ work.work.id }}" class="hidden-file">
                                         <div class="d-flex justify-content-end">
                                             <button type="button" class="close" onclick="closeFile('{{ work.work.id }}')">X</button>
                                         </div>
-                                        <div id="file-uploads-{{ work.work.id }}">
-                                            <label for="fileInput-{{ work.work.id }}-1" class="choose-file">เลือกไฟล์</label>
-                                            <input type="file" id="fileInput-{{ work.work.id }}-1" class="hidden-input" onchange="updateFileName(this,'{{ work.work.id }}-1')" />
+                                        <div id="file-uploads-{{ work.id }}">
+                                            <p>ต้องเป็นไฟล์ ZIP เท่านั้น</p>
+                                            <label for="fileInput-{{ work.id }}" class="choose-file" style="cursor: pointer;">
+
+                                                {% for message in messages %}
+                                                <li style="list-style: none;">{{ message }}</li>
+                                            {% endfor %}
+                                            {% if work.file %}
+                                            {{  work.file }}
+
+                                            {% else %}
+                                            เลือกไฟล์
+                                           {% endif %}
+                                            
+                                            </label>
+                                            
+                                            <input type="file" id="fileInput-{{ work.id }}" class="hidden-input" name="fileInput-{{ work.id }}" onchange="updateFileName(this, '{{ work.id }}')" />
                                         </div>
-                                        <button type="button" onclick="addFileUpload('{{ work.work.id }}')">&plus;</button>
+                                        
+                
                                         <div class="d-flex justify-content-end">
-                                        <button type="submit">ยืนยัน</button>
+                                            <button type="submit">ยืนยัน</button>
+                                        </div>
                                     </div>
-                                    </div>
-                                </form>
+                               
                                 
                                 
                         </tr>
-
+                    </form>
                     {% endfor %}
                     </tbody>
                 </table>
@@ -163,31 +182,7 @@
 </script>
 
 <script>
-    let fileCounter = 1;
-
-    function addFileUpload(workId) {
-        fileCounter++;
-        const fileContainer = document.getElementById(`file-uploads-${workId}`);
-        const newDiv = document.createElement('div'); // Create a new div for each added row
-        newDiv.classList.add('file-row'); // Apply a class to the new div
-
-        const newLabel = document.createElement('label');
-        newLabel.setAttribute('for', `fileInput-${workId}-${fileCounter}`);
-        newLabel.classList.add('choose-file');
-        newLabel.textContent = 'เลือกไฟล์';
-
-        const newInput = document.createElement('input');
-        newInput.type = 'file';
-        newInput.id = `fileInput-${workId}-${fileCounter}`;
-        newInput.classList.add('hidden-input');
-        newInput.setAttribute('onchange', `updateFileName(this, '${workId}-${fileCounter}')`);
-
-        newDiv.appendChild(newLabel);
-        newDiv.appendChild(newInput);
-        fileContainer.appendChild(newDiv);
-    }
-
-    function updateFileName(input, labelId) {
+     function updateFileName(input, labelId) {
         const fileLabel = document.querySelector(`label[for="fileInput-${labelId}"]`);
         fileLabel.textContent = input.files[0].name;
     }

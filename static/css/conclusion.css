@@ -1,0 +1,22 @@
+h1,h2,h3,h4,h5,h6,p,td,th {
+    color: #00509D;
+}
+
+button {
+    background-color: #D7E3FC;
+    border: 0px;
+    padding: 7px 15px;
+    color: #00509D;
+    font-weight: bold;
+}
+
+
+.container .name {
+    display: inline-block;
+    font-size: 24px;
+    background-color: #D7E3FC;
+    border-radius: 50px;
+    padding: 10px;
+    font-weight: bold;
+}
+

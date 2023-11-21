@@ -30,22 +30,35 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
-                   
-                    <!-- Display these links if the user is a staff member -->
+                    
+                    {% if user.employee.position == 'Dean' %}
                     <li class="nav-item p-2">
-                        <a class="text-decoration-none h5"  href="">หน้าหลัก</a>
-                    </li>
-                   
-                    <li class="nav-item p-2">
-                        <a class="text-decoration-none h5"  href="">รายงาน</a>
+                        <a class="text-decoration-none h5" href="{% url 'selectfilter' %}">หน้าหลัก</a>
                     </li>
                     <li class="nav-item p-2">
-                        <a class="text-decoration-none h5"  href="">ตั้งค่างาน</a>
+                        <a class="text-decoration-none h5" href="{% url 'informationuser' %}">ข้อมูลผู้ใช้</a>
                     </li>
-                   
                     <li class="nav-item p-2">
-                        <a class="text-decoration-none h5" href="{% url 'logout' %}">ออกจากระบบ</a>
+                        <a class="text-decoration-none h5" href="{% url 'informationstaff' %}">ข้อมูลทั้งหมด</a>
                     </li>
+                    <li class="nav-item p-2">
+                        <a class="text-decoration-none h5" href="{% url 'work_history' %}">ประวัติรายงาน</a>
+                    </li>
+                    <li class="nav-item p-2">
+                        <a class="text-decoration-none h5" href="{% url 'delete_data' %}">ลบข้อมูลงาน</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item p-2">
+                        <a class="text-decoration-none h5" href="{% url 'informationuser' %}">หน้าหลัก</a>
+                    </li>
+                    <li class="nav-item p-2">
+                        <a class="text-decoration-none h5" href="{% url 'work_history' %}">ประวัติรายงาน</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item p-2">
+                    <a class="text-decoration-none h5" href="{% url 'logout' %}">ออกจากระบบ</a>
+                </li>
+                
                    
                     <!-- Add other menu items as needed -->
                 </ul>

@@ -4,53 +4,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Work History</title>
+    <title>หน้ากรอกเกณฑ์คณบดี</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/formreport.css' %}">
 
 </head>
 <body>
-
     <!-- if user == คณบดี -->
-
    <div class="container mt-5">
-
     <h3 class="text-center mb-4">กรอกเกณฑ์</h3>
     <div class="table-responsive">
-        <form action="" method="post">
+        <form action="" method="POST">
             {% csrf_token %}
-            <table id="workdata-table" class="table table-bordered table-striped text-center">
-                <thead class="thead-dark">
-                    <tr>
-                        <th data-filter="true" data-filter-type="select">งาน</th>
-                        <th data-filter="true" data-filter-type="select">เกณท์</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for works in work_units %}
-                        <tr>
-                            <td>{{ works.workname }}</td>
-                            <td class="text-center w-50">
-                                <input type="text" name="" placeholder="{% if selected_position == 'Dean' %}{{ works.workname.unitsfordeans }}{% elif selected_position == 'Lecturer' %}{{ works.workname.unitsforlecturers }}{% elif selected_position == 'Researcher' %}{{ works.workname.unitsforemployees }}{% endif %}">
-                            </td>
-                        
-                        </tr>
-                    {% endfor %}
-                </tbody>     
-            </table>
-            
-                <div class="d-flex justify-content-end">
-                    <button type="submit" style="border-radius: 50px;">Submit</button>
-                </div>
-            </form>
-        </div>
+            <!-- ...your HTML code before the table... -->
 
+<table id="workdata-table" class="table table-bordered">
+    <thead class="thead-dark">
+        <tr class="text-center">
+            <th data-filter="true" data-filter-type="select">กิจกรรม / โครงการ / งาน</th>
+            <th data-filter="true" data-filter-type="select">ตัวชี้วัด / เกณฑ์การประเมิน</th>
+            <th data-filter="true" data-filter-type="select">เกณฑ์ต่ำสุด</th>
+            <th data-filter="true" data-filter-type="select">เกณฑ์สูงสุด</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for group_name, group_works in grouped_works.items %}
+        <tr>
+            <td rowspan="{{ group_works|length }}">{{ group_name }}</td>
+            {% if group_works.0.name.name %}
+            <td >{{ group_works.0.name.description }}</td>
+                {% else %}
+            <td>{{ group_works.0.description }}</td>
+                {% endif %}
+            <td class="align-middle">
+                <input class="text-center" type="number" value="{% if group_works.0.minunit > 0 %}{{ group_works.0.minunit }}{% else %}0{% endif %}" 
+                name="{% if group_works.0.name %}minunit_{{ group_works.0.id }}{% else %}minunit_{{ group_works.0.name.id }}{% endif %}">
+            </td>
+            <td class="align-middle">
+                <input class="text-center" type="number" value="{% if group_works.0.maxunit > 0 %}{{ group_works.0.maxunit }}{% else %}0{% endif %}" 
+                name="{% if group_works.0.name %}maxunit_{{ group_works.0.id }}{% else %}maxunit_{{group_works.0.name.id}}{% endif %}">
+            </td>
+        </tr>
+        {% for work in group_works|slice:"1:" %}
+        <tr>
+            {% if work.name.name %}
+            <td >{{ work.name.description }}</td> 
+                {% else %}
+                <td>{{ work.description }}</td>
+                {% endif %}
+            <td class="align-middle">
+                <input class="text-center" type="number" value="{% if work.minunit > 0 %}{{ work.minunit }}{% else %}0{% endif %}" 
+                name="{% if work.name %}minunit_{{work.id}}{% else %}minunit_{{work.name.id}}{% endif %}">
+            </td>
+            <td class="align-middle">
+                <input class="text-center" type="number" value="{% if work.maxunit > 0 %}{{ work.maxunit }}{% else %}0{% endif %}" 
+                name="{% if work.name %}maxunit_{{work.id}}{% else %}maxunit_{{work.name.id}}{% endif %}">
+            </td>
+        </tr>
+        {% endfor %}
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- ...rest of your HTML code... -->
+
+            <div class="d-flex justify-content-end mb-3">
+                <button type="submit" style="border-radius: 50px;">Submit</button>
+            </div>
+        </form>
     </div>
-
 </div>
-
-    
-
-
 </body>
 </html>

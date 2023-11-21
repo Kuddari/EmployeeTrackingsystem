@@ -1,0 +1,113 @@
+{% include 'navbar.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/conclusion.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <title>หน้าสรุปผลประเมิน</title>
+</head>
+<body>
+
+    <div class="container mt-5">
+        <h3 class="text-center mb-3">สรุปคะแนน</h3>
+        <div class="text-center">
+        <h3 class="mb-4 name">{{employee.username.first_name}} {{employee.username.last_name}}</h3>
+    </div>
+        <div class="table-responsive">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <table id="workdata-table" class="table table-bordered">
+                    <thead class="thead-dark">
+                        <tr class="text-center align-middle">
+                            <th data-filter="true" data-filter-type="select">กิจกรรม / โครงการ / งาน</th>
+                            <th data-filter="true" data-filter-type="select">ตัวชี้วัด / เกณฑ์การประเมิน</th>
+                            <th data-filter="true" data-filter-type="select">เกณท์</th>
+                            <th data-filter="true" data-filter-type="select">ผลรวม</th>
+                            <th id="sem2Header" data-filter="true" data-filter-type="select">ค่าคะแนนถ่วงน้ำหนัก</th>
+                            <th id="sem2Header" data-filter="true" data-filter-type="select">File</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for group_name, group_works in grouped_works.items %}
+                        <tr>
+                            <td rowspan="{{ group_works|length }}">{{ group_name }}</td>
+                            <td name="{{group_works.0.work.name.id}}">{{ group_works.0.work.name.description }}</td>
+                               
+                            <td class="text-center align-middle" style="width: 10%;">
+                                ({{group_works.0.total}} - {{group_works.0.work.maxunit}})
+                            </td>
+                                
+                            <td class="text-center align-middle" style="width: 7%;">
+                                {{group_works.0.total}}
+                            </td>
+                            <td  data-id="{{ group_works.0.id }}" class="text-center align-middle">{{group_works.0.result}}</td>
+                            <td class="text-center align-middle">
+                            {% if group_works.0.file %}
+                                <a href="{% url 'download_file' group_works.0.id %}">ดาวน์โหลด</a>
+                            {% else %}
+                                No File
+                            {% endif %}</td>
+                            
+                        </tr>
+                        
+                           
+                        
+                            {% for work in group_works|slice:"1:" %}
+                                    <tr>
+                                        
+                                        <td>{{ work.work.name.description }}</td>
+                                        
+                                            
+                                            <td class="text-center align-middle" style="width: 10%;">
+                                                ({{work.work.minunit}} - {{work.work.maxunit}}) 
+                                            </td>
+
+                                        <td  class="text-center align-middle">
+                                            {{work.total}}
+                                        </td>
+                                        <td data-id="{{ work.work.id }}" class="text-center align-middle">
+                                            {{work.result}}
+                                        </td>
+                                        <td class="text-center align-middle">
+                                        {% if work.file %}
+                                            <a href="{% url 'download_file' work.id %}">ดาวน์โหลด</a>
+                                        {% else %}
+                                            No File
+                                        {% endif %}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% endfor %}
+                                    <tr class="text-center align-middle">
+                                        <td class="text-right" colspan="3">ผลรวม</td>
+                                        <td>{{ total_sum }}</td>
+                                        <td>{{ score_sum }}</td>
+                                    </tr>
+                                    <tr class="text-center align-middle">
+                                        <td class="text-left" colspan="2">สรุปคะแนนส่วนผลสัมฤทธิ์ของงาน = </td>
+                                        <td colspan="3"> ผลรวมของค่าคะแนนถ่วงน้ำหนัก...{{ score_sum }}..../5 =</td>
+                                        <td>{{ result_sum }}</td>
+                                    </tr>
+                        </tbody>
+                        
+                    </table>
+
+                    {% if user.employee.position == 'Dean' %}
+                        <div class="d-flex justify-content-end mb-3">
+                            <button type="submit" style="border-radius: 50px; font-size: 20px;">ยืนยัน</button>
+                        </div>
+                    
+                        {% else %}
+                        {% endif %}
+                </form>
+            
+        </div>
+    </div>
+   
+
+
+</body>
+</html>

@@ -4,25 +4,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เลือกตำแหน่งงาน</title>
+    <title>หน้าข้อมูลผู้ใช้</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/informationuser.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+
+    
 </head>
 <body>
-
-    {{user}}
+    
+    {% for file in files %}
+    {{file.file}}
+    {% endfor %}
     <div class="container text-center">
-        <h2 class="name">Sulaiman Charaae</h2>
+        <h2 class="name">{{user.first_name}} {{user.last_name}}</h2>
         <img class="images" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdfcTjke0ma-YjGc4jtV2nnwcarM9Mw045WA&usqp=CAU" alt="80*80">
     
         <div class="row mt-4">
-            <div class="col-1 d-flex justify-content-start">
+            
+            <div class="col-7">
+                <p class="h4 d-flex justify-content-center">รายการ</p>
             </div>
-            <div class="col-6">
-                <p class="h4 d-flex justify-content-start">รายการ</p>
-            </div>
-            <div class="col-1 d-flex justify-content-center">
+            <div class="col-2 d-flex justify-content-center">
                 <p class="h4">เกณฑ์</p>
             </div>
             <div class="col-1 d-flex justify-content-center">
@@ -34,36 +37,155 @@
             <div class="col-1 d-flex justify-content-center">
                 <p class="h4 pad">รวม</p>
             </div>
-        </div>
 
-        <div class="row background">
-            <div class="col-1 d-flex justify-content-start">
-                <p class="h5">1.</p>
-            </div>
-            <div class="col-6 d-flex justify-content-start">
-                <p class="h5">งานวิจัยสาขาวิทยาศาสตร์</p>
-            </div>
-            <div class="col-1 d-flex justify-content-center">
-                <p class="h5">20</p>
-            </div>
-            <div class="col-1 d-flex justify-content-center">
-                <p class="h5">5</p>
-            </div>
-            <div class="col-1 d-flex justify-content-center">
-                <p class="h5">0</p>
-            </div>
-            <div class="col-1 d-flex justify-content-center">
-                <p class="h5">0</p>
-            </div>
-            <div class="col-1 d-flex justify-content-center">
-                <a href="#" class="save-data" onclick="document.getElementById('fileInput').click(); return false;">
-                    <i class="fas fa-save"></i>
+        </div>
+        {% for group_name, group_works in grouped_works.items %}
+        <div class="row background mb-4">
+            <div class="col-7 d-flex justify-content-start mt-2">
+                <a href="#" class="save-data" onclick="toggleBox('{{ group_works.0.id }}'); return false;">
+                    <p class="h5">{{ group_name }}</p>
                 </a>
-                <input type="file" id="fileInput" class="hidden-input" />
+            </div>
+            
+            <div id="hiddenBox{{ group_works.0.id }}" class="hidden-box">
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="close color-buttom-close" onclick="toggleBox('{{ group_works.0.id }}')">X</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ตัวชี้วัด / เกณฑ์การประเมิน</th>
+                            <th>เกณฑ์</th>
+                            <th>เทอม1</th>
+                            <th>เทอม2</th>
+                            <th>รวม</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for work in group_works %}
+                        <form action="" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <tr>
+                                <td class="description" name="description-{{work.id}}">{{ work.work.name.description }}</td>
+                                <td style="width: 20%;">({{ work.work.minunit }} - {{ work.work.maxunit }})</td>
+                                <td>{{ work.term1 }}</td>
+                                <td>{{ work.term2 }}</td>
+                                <td>{{ work.total }}</td>
+                                <td>
+                                    <a href="#" class="save-data" onclick="toggleFile('{{ work.work.id }}'); return false;">
+                                        <i class="fas fa-save"></i>
+                                    </a>
+                                </td>
+                               
+                                    
+                                    <div id="hidden-file-{{ work.work.id }}" class="hidden-file">
+                                        <div class="d-flex justify-content-end">
+                                            <button type="button" class="close mb-3 color-buttom-close" onclick="closeFile('{{ work.work.id }}')">X</button>
+                                        </div>
+                                        <div id="file-uploads-{{ work.id }}">
+                                            <p>ต้องเป็นไฟล์ ZIP เท่านั้น</p>
+                                            <label for="fileInput-{{ work.id }}" class="choose-file mb-3" style="cursor: pointer;">
+
+                                                {% for message in messages %}
+                                                <li style="list-style: none;">{{ message }}</li>
+                                            {% endfor %}
+                                            {% if work.file %}
+                                            {{  work.file }}
+
+                                            {% else %}
+                                            เลือกไฟล์
+                                           {% endif %}
+                                            
+                                            </label>
+                                            
+                                            <input type="file" id="fileInput-{{ work.id }}" class="hidden-input" name="fileInput-{{ work.id }}" onchange="updateFileName(this, '{{ work.id }}')" />
+                                        </div>
+                                        
+                
+                                        <div class="d-flex justify-content-end">
+                                            <button class="color-buttom" type="submit">ยืนยัน</button>
+                                        </div>
+                                    </div>       
+                        </tr>
+                    </form>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-2 d-flex justify-content-center">
+                <p class="h5">({{group_works.0.work.minunit}} - {{group_works.0.work.maxunit}})</p>
+            </div>
+            <div class="col-1 d-flex justify-content-center">
+                <p class="h5">{{ group_works.0.term1 }}</p>
+            </div>
+            <div class="col-1 d-flex justify-content-center">
+                <p class="h5">{{group_works.0.term2}}</p>
+            </div>
+            <div class="col-1 d-flex justify-content-center">
+                <p class="h5">{{group_works.0.total}}</p>
+            </div>
+            
+        </div>
+        {% endfor %}
+    
+        <div class="row">
+            <div class="col-6"></div>
+            <div class="col-3">
+                <a class="h3 d-flex justify-content-center mt-1 color" href="{% url 'report' user.id %}">รายละเอียดงาน</a>
+            </div>
+            <div class="col-3">
+                <a class="h3 d-flex justify-content-center mt-1 color" href="{% url 'formreportuser' %}">กำหนดเกณฑ์</a>
             </div>
         </div>
     </div>
+    <script>
+        function closeBox(groupId) {
+            var hiddenBox = $('#hiddenBox' + groupId);
+            hiddenBox.hide();
+        }
     
+        function toggleBox(groupId) {
+            if ($('#hiddenBox' + groupId).is(':visible')) {
+                closeBox(groupId);
+            } else {
+                $('.hidden-box').not('#hiddenBox' + groupId).hide();
+                var hiddenBox = $('#hiddenBox' + groupId);
+                hiddenBox.toggle();
+            }
+        }
+    
+        </script>
+
+<script>
+    // JavaScript functions for toggling the file box
+    function closeFile(workId) {
+        var fileBox = document.getElementById('hidden-file-' + workId);
+        fileBox.style.display = 'none';
+    }
+
+    function toggleFile(workId) {
+        var fileBox = document.getElementById('hidden-file-' + workId);
+        if (fileBox.style.display === 'block') {
+            closeFile(workId);
+        } else {
+            var allFileBoxes = document.getElementsByClassName('hidden-file');
+            for (var i = 0; i < allFileBoxes.length; i++) {
+                allFileBoxes[i].style.display = 'none';
+            }
+            fileBox.style.display = 'block';
+        }
+    }
+</script>
+
+<script>
+     function updateFileName(input, labelId) {
+        const fileLabel = document.querySelector(`label[for="fileInput-${labelId}"]`);
+        fileLabel.textContent = input.files[0].name;
+    }
+</script>
+
+
 
     
 

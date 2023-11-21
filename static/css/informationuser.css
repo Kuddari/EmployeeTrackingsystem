@@ -1,4 +1,4 @@
-h1, h2, h3, h4, h5, h6, p, a,th ,td {
+h1, h2, h3, h4, h5, h6, p, a,th ,td, button {
     color: #00509D;
 }
 
@@ -92,9 +92,7 @@ h1, h2, h3, h4, h5, h6, p, a,th ,td {
 }
 
 .hidden-box .hidden-file .choose-file {
-    margin: 10px;
     border-bottom: 2px solid #00509D;
-    padding-bottom: 13px;
 }
 
 
@@ -103,8 +101,26 @@ h1, h2, h3, h4, h5, h6, p, a,th ,td {
     text-decoration: none;
     background-color: #D7E3FC;
     border-radius: 50px;
-    padding: 10px 20px;
+    padding: 10px 10px;
     border: 3px solid #00509D;
+}
+
+.color-buttom {
+    font-size: 14px;
+    background-color: #D7E3FC;
+    border-radius: 50px;
+    padding: 5px 10px;
+    border: 3px solid #00509D;
+    font-weight: bold;
+}
+
+.color-buttom-close {
+    font-size: 14px;
+    background-color: #D7E3FC;
+    border-radius: 10px;
+    padding: 3px 10px;
+    border: 3px solid #00509D;
+    font-weight: bold;
 }
 
 
@@ -132,6 +148,13 @@ h1, h2, h3, h4, h5, h6, p, a,th ,td {
         font-size: 18px;
         padding: 5px 10px;
        
+    }
+
+    .hidden-box .hidden-file {
+        display: none;
+        position: fixed;
+        width: auto;
+        height: auto;
     }
 }
 

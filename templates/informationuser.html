@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เลือกตำแหน่งงาน</title>
+    <title>หน้าข้อมูลผู้ใช้</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/informationuser.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
@@ -49,12 +49,12 @@
             
             <div id="hiddenBox{{ group_works.0.id }}" class="hidden-box">
                 <div class="d-flex justify-content-end">
-                    <button type="button" class="close" onclick="toggleBox('{{ group_works.0.id }}')">X</button>
+                    <button type="button" class="close color-buttom-close" onclick="toggleBox('{{ group_works.0.id }}')">X</button>
                 </div>
                 <table>
                     <thead>
                         <tr>
-                            <th>รายการ</th>
+                            <th>ตัวชี้วัด / เกณฑ์การประเมิน</th>
                             <th>เกณฑ์</th>
                             <th>เทอม1</th>
                             <th>เทอม2</th>
@@ -81,11 +81,11 @@
                                     
                                     <div id="hidden-file-{{ work.work.id }}" class="hidden-file">
                                         <div class="d-flex justify-content-end">
-                                            <button type="button" class="close" onclick="closeFile('{{ work.work.id }}')">X</button>
+                                            <button type="button" class="close mb-3 color-buttom-close" onclick="closeFile('{{ work.work.id }}')">X</button>
                                         </div>
                                         <div id="file-uploads-{{ work.id }}">
                                             <p>ต้องเป็นไฟล์ ZIP เท่านั้น</p>
-                                            <label for="fileInput-{{ work.id }}" class="choose-file" style="cursor: pointer;">
+                                            <label for="fileInput-{{ work.id }}" class="choose-file mb-3" style="cursor: pointer;">
 
                                                 {% for message in messages %}
                                                 <li style="list-style: none;">{{ message }}</li>
@@ -104,12 +104,9 @@
                                         
                 
                                         <div class="d-flex justify-content-end">
-                                            <button type="submit">ยืนยัน</button>
+                                            <button class="color-buttom" type="submit">ยืนยัน</button>
                                         </div>
-                                    </div>
-                               
-                                
-                                
+                                    </div>       
                         </tr>
                     </form>
                     {% endfor %}

@@ -3,11 +3,14 @@ from django.contrib.auth import login,authenticate
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
+from django.db.models import Sum
 from django.http import HttpResponse, HttpResponseRedirect,Http404,HttpResponseBadRequest
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import *
 import itertools
+from django.core.paginator import Paginator
+from datetime import datetime
 
 
 
@@ -221,5 +224,125 @@ def report_view(request, employee_id):
     context = {
         'grouped_works': grouped_works,
         'results': results,
+        'employee': employee
     }
     return render(request, "report.html", context)
+
+
+def delete_data_view(request):
+    # Check if the request method is POST
+    if request.method == 'POST':
+        # Delete all records in the Setunit table
+        Setunit.objects.all().delete()
+
+        # Delete all records in the Result table
+        Result.objects.all().delete()
+
+        # Redirect to a success page or any other page you desire
+        return redirect('selectfilter')
+
+    # Render a template with a button to trigger the deletion
+    return render(request, 'delete_data.html')
+
+def conclusion_view(request, employee_id):
+    employee = get_object_or_404(Employee, id=employee_id)
+    results = Result.objects.filter(employee=employee)
+    grouped_works = {key: list(group) for key, group in itertools.groupby(results, key=lambda x: x.work.name.name)}
+    total_sum = (results.aggregate(Sum('total'))['total__sum'] or 0)
+    score_sum = (results.aggregate(Sum('result'))['result__sum'] or 0)
+    result_sum = int(score_sum / 5)
+    if request.method == 'POST':
+        for result in results:
+
+        # Create a new Save object
+            save_obj = Save(
+                employee_id = result.employee.username,
+                employee_firstname = result.employee.username.first_name,
+                employee_lastname = result.employee.username.last_name,
+                work=result.work.name.name,
+                description=result.work.name.description,
+                unit=result.work.minunit,
+                total=result.total,
+                score=result.result,
+                file=result.file, 
+            )
+            save_obj.save()
+        return HttpResponseRedirect(reverse('selectfilter'))
+
+    context = {
+        'grouped_works': grouped_works,
+        'employee': employee,
+        'total_sum': total_sum,
+        'score_sum': score_sum,
+        'result_sum': result_sum
+    }
+
+    return render(request,"conclusion.html", context)
+
+def download_file_view(request, result_id):
+    # Try to get the result from the Result model
+    result = Result.objects.filter(id=result_id).first()
+
+    # Try to get the Save from the Save model
+    report_file = Save.objects.filter(id=result_id).first()
+
+    # Check if either Result or Save is found
+    if result:
+        file_path = result.file.path
+    elif report_file:
+        file_path = report_file.file.path
+    else:
+        raise Http404("File not found")
+
+    with open(file_path, 'rb') as file:
+        response = HttpResponse(file.read(), content_type='application/force-download')
+        response['Content-Disposition'] = f'attachment; filename={result.file.name if result else report_file.file.name}'
+
+    return response
+
+def work_history_view(request):
+    # Retrieve all WorksData
+    workdata_history = Save.objects.all()
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    employee_query = request.GET.get('employee')
+    employee_choices = Employee.objects.values_list('username__first_name', 'username__last_name').distinct().order_by('username__first_name')
+
+
+    # Convert start_date and end_date to datetime objects
+    start_date = datetime.strptime(start_date, '%d-%m-%Y') if start_date else None
+    end_date = datetime.strptime(end_date, '%d-%m-%Y') if end_date else None
+
+
+    if start_date:
+        workdata_history = workdata_history.filter(date__gte=start_date)
+    
+    if end_date:
+        workdata_history = workdata_history.filter(date__lte=end_date)
+    
+    if employee_query:
+        workdata_history = workdata_history.filter(employee_firstname=employee_query)
+
+    # Get the current page number from the request's GET parameters
+    page_number = request.GET.get('page')
+
+    # Number of items to display per page (you can customize this)
+    items_per_page = request.GET.get('items_per_page', 10)  # Default to 10 items per page
+
+    # Create a Paginator instance
+    paginator = Paginator(workdata_history, items_per_page)
+
+    # Get the current page's data
+    page_data = paginator.get_page(page_number)
+
+    # Pass the data to the template
+    context = {
+        'workdata_history': page_data,
+        'employee_choices' : employee_choices,
+        'start_date' : start_date,
+        'end_date' : end_date,
+        'items_per_page': items_per_page,
+    }
+
+
+    return render(request,"work_history.html", context)

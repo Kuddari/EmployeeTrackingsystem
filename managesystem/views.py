@@ -239,7 +239,7 @@ def delete_data_view(request):
         Result.objects.all().delete()
 
         # Redirect to a success page or any other page you desire
-        return redirect('selectfilter')
+        return redirect('informationstaff')
 
     # Render a template with a button to trigger the deletion
     return render(request, 'delete_data.html')

@@ -18,8 +18,10 @@
                 <h2 class="color">คณบดี</h2>
                 {% elif position == 'Lecturer' %}
                 <h2 class="color">รองคณบดี</h2>
-                {% else %}
+                {% elif position == 'Researcher' %}
                 <h2 class="color">อาจารย์</h2>
+                {% else %}
+                <h2 class="color">ทั้งหมด</h2>
                 {% endif %}
              
 
@@ -40,6 +42,7 @@
             <div class="col-1 d-flex justify-content">
                 <img class="mt-1" src="{{ text.profile.url }}" alt="50*50">
             </div>
+            
             {% else %}
             <div class="col-1 d-flex justify-content">
                 <img class="mt-1" src="{% static 'images/ftu_logo-removebg-preview.png' %}" alt="50*50">
@@ -87,42 +90,96 @@
                 });
             });
         </script>
-   
-   <script>
+
+
+<script>
     $(document).ready(function () {
-        // Select all elements with the class 'custom-dropdown' and iterate over them
+        // Function to reset the dropdown
+        function resetCustomDropdown(dropdown) {
+            dropdown.find('.selected-option').text('ยังไม่ตรวจ');
+            // Reset the stored status in local storage
+            const employeeId = dropdown.data('employee-id');
+            localStorage.removeItem('status_' + employeeId);
+        }
+
+        // Handle the click event on the options
+        $('.custom-dropdown .options li').click(function () {
+            const dropdown = $(this).closest('.custom-dropdown');
+            const employeeId = dropdown.data('employee-id');
+            const selectedValue = $(this).data('value');
+            const selectedText = $(this).text();
+
+            // Implement logic to update the status on the server (e.g., using AJAX)
+
+            // Update the selected option
+            dropdown.find('.selected-option').text(selectedText);
+
+            // Store the selected status in local storage
+            storeSelectedStatus(employeeId, selectedValue);
+
+            // Hide the options
+            dropdown.find('.options').hide();
+        });
+
+        // Set the initial value of the dropdown from local storage or set to default 'ยังไม่ตรวจ'
         $('.custom-dropdown').each(function () {
             const dropdown = $(this);
             const employeeId = dropdown.data('employee-id');
-
-            // Handle the click event to show/hide the options
-            dropdown.find('.selected-option').click(function () {
-                dropdown.find('.options').toggle();
-            });
-
-            // Handle the click event on options
-            dropdown.find('.options li').click(function () {
-                const selectedValue = $(this).data('value');
-                const selectedText = $(this).text();
-
-                // Implement logic to update the status on the server (e.g., using AJAX)
-
-                // Update the selected option
-                dropdown.find('.selected-option').text(selectedText);
-
-                // Store the selected status in local storage
-                storeSelectedStatus(employeeId, selectedValue);
-
-                // Hide the options
-                dropdown.find('.options').hide();
-            });
-
-            // Set the initial value of the dropdown based on the stored value or get it from the server
             const storedStatus = getStoredStatus(employeeId);
-            const initialStatus = storedStatus !== null ? storedStatus : getEmployeeStatus(employeeId);
-            dropdown.find('.selected-option').text(initialStatus === '1' ? 'ยังไม่ตรวจ' : 'เรียบร้อย');
-
+            if (storedStatus !== null) {
+                // If there's a stored status, set the dropdown to that value
+                const selectedText = storedStatus === '1' ? 'ยังไม่ตรวจ' : 'เรียบร้อย';
+                dropdown.find('.selected-option').text(selectedText);
+            } else {
+                // If no stored status, reset the dropdown to default
+                resetCustomDropdown(dropdown);
+            }
         });
+
+        // Handle the click event to show/hide the options
+        $('.custom-dropdown .selected-option').click(function () {
+            const dropdown = $(this).closest('.custom-dropdown');
+            dropdown.find('.options').toggle();
+        });
+
+        // Close the dropdown when clicking outside of it
+        $(document).on('click', function (event) {
+            if (!$(event.target).closest('.custom-dropdown').length) {
+                $('.custom-dropdown .options').hide();
+            }
+        });
+
+        // Function to reset all dropdowns to default 'ยังไม่ตรวจ'
+        function resetDropdowns() {
+            $('.custom-dropdown').each(function () {
+                const dropdown = $(this);
+                resetCustomDropdown(dropdown);
+            });
+        }
+
+        // Check for the reset flag in local storage on page load
+        const resetFlagOnLoad = localStorage.getItem('resetDropdown');
+        if (resetFlagOnLoad === 'true') {
+            // If reset flag is true, reset all dropdowns and update the flag
+            resetDropdowns();
+            localStorage.setItem('resetDropdown', 'false');
+        }
+
+        // Check for the reset flag in local storage periodically
+        function checkResetFlag() {
+            const resetFlag = localStorage.getItem('resetDropdown');
+            if (resetFlag === 'true') {
+                // If reset flag is true, reset all dropdowns and update the flag
+                resetDropdowns();
+                localStorage.setItem('resetDropdown', 'false');
+            }
+
+            // Continue checking periodically
+            setTimeout(checkResetFlag, 5000);  // Check every 5 seconds
+        }
+
+        // Start checking for the reset flag when the page loads
+        checkResetFlag();
     });
 
     // Implement a function to get the stored status from local storage
@@ -137,10 +194,14 @@
 
     // Implement a function to get the employee status from the server
     function getEmployeeStatus(employeeId) {
-  
         return Math.random() < 0.5 ? '1' : '2';
     }
 </script>
+
+
+
+   
+
 
 </body>
 </html>

@@ -16,5 +16,17 @@
         <button type="submit">ยืนยันลบข้อมูลทั้งหมด</button>
     </form>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Add an event listener to the form
+        $('form').submit(function () {
+            // Set a flag in local storage to signal the reset
+            localStorage.setItem('resetDropdown', 'true');
+        });
+    });
+</script>
+
 </body>
 </html>

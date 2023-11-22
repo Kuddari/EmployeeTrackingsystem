@@ -252,7 +252,7 @@ def conclusion_view(request, employee_id):
     grouped_works = {key: list(group) for key, group in itertools.groupby(results, key=lambda x: x.work.name.name)}
     total_sum = (results.aggregate(Sum('total'))['total__sum'] or 0)
     score_sum = (results.aggregate(Sum('result_score'))['result_score__sum'] or 0)
-    result_sum = int(score_sum / 10)
+    result_sum = float(score_sum / 10)
     
     if request.method == 'POST':
         for group_name, group_works in grouped_works.items():

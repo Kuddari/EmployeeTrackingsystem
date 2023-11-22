@@ -1,3 +1,4 @@
+
 h1,h2,h3,h4,h5,h6,p,td,th {
     color: #00509D;
 }
@@ -24,4 +25,13 @@ select {
     padding: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
+}
+
+button {
+    font-size: 20px;
+    background-color: #D7E3FC;
+    border: 3px solid #00509D;
+    padding: 7px 15px;
+    color: #00509D;
+    font-weight: bold;
 }

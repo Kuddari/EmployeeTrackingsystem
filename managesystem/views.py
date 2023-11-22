@@ -138,7 +138,9 @@ def formreport_view(request):
         else:
             works = Work.objects.all()
             grouped_works = {key: list(group) for key, group in itertools.groupby(works, key=lambda x: x.name)}
-            
+    else :
+        return HttpResponseRedirect(reverse('selectfilter'))
+
     if request.method == 'POST':
         # Handle form submission and update or create Setunit records
         for group_name, group_works in grouped_works.items():
@@ -250,23 +252,20 @@ def conclusion_view(request, employee_id):
     grouped_works = {key: list(group) for key, group in itertools.groupby(results, key=lambda x: x.work.name.name)}
     total_sum = (results.aggregate(Sum('total'))['total__sum'] or 0)
     score_sum = (results.aggregate(Sum('result_score'))['result_score__sum'] or 0)
-    result_sum = int(score_sum / 5)
+    result_sum = int(score_sum / 10)
     
     if request.method == 'POST':
-         for group_name, group_works in grouped_works.items():
+        for group_name, group_works in grouped_works.items():
             for work in group_works:
-                employee_score = request.POST.get(f'employee_score_{work.id}')
-                dean_score = request.POST.get(f'dean_score_{work.id}')  
-                dean_score = int(dean_score) if dean_score.isdigit() else 0              
+                employee_score = float(request.POST.get(f'employee_score_{work.id}',0))
+                dean_score = float(request.POST.get(f'dean_score_{work.id}',0))
                 userresult, created = Result.objects.get_or_create(employee=employee, work=work.work)
                 # Update or create minunit and maxunit values
                 userresult.employee_score = employee_score
                 userresult.dean_score = dean_score
                 userresult.result_score = work.total * dean_score
-           
-
                 userresult.save()
-            if work.employee_score != 0:
+        if work.employee_score != float(0):
                 for result in results:
                     save_obj = Save(
                         employee_id = result.employee.username,
@@ -280,8 +279,8 @@ def conclusion_view(request, employee_id):
                         result_score = result.result_score,
                         file=result.file, 
                     )
-                    save_obj.save()
-            return HttpResponseRedirect(reverse('selectfilter'))
+                    save_obj.save()        
+        return HttpResponseRedirect(reverse('selectfilter'))
 
     context = {
         'grouped_works': grouped_works,
@@ -315,11 +314,11 @@ def download_file_view(request, result_id):
     return response
 
 def work_history_view(request):
-    # Retrieve all WorksData
     workdata_history = Save.objects.all()
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
     employee_query = request.GET.get('employee')
+    work_history_employee = Save.objects.filter(employee_id = request.user)
     employee_choices = Employee.objects.values_list('username__first_name', 'username__last_name').distinct().order_by('username__first_name')
 
 
@@ -330,12 +329,15 @@ def work_history_view(request):
 
     if start_date:
         workdata_history = workdata_history.filter(date__gte=start_date)
+        work_history_employee =  work_history_employee.filter(date__gte=start_date)
     
     if end_date:
         workdata_history = workdata_history.filter(date__lte=end_date)
+        work_history_employee =  work_history_employee.filter(date__lte=end_date)
     
     if employee_query:
         workdata_history = workdata_history.filter(employee_firstname=employee_query)
+
 
     # Get the current page number from the request's GET parameters
     page_number = request.GET.get('page')
@@ -352,6 +354,7 @@ def work_history_view(request):
     # Pass the data to the template
     context = {
         'workdata_history': page_data,
+        'work_history_employee':work_history_employee,
         'employee_choices' : employee_choices,
         'start_date' : start_date,
         'end_date' : end_date,

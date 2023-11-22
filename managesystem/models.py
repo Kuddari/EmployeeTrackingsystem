@@ -17,7 +17,7 @@ class Employee(models.Model):
     profile = models.FileField(upload_to='profile/', blank=True, null=True)
            
     def __str__(self):
-        return f"{self.username.first_name} {self.username.last_name} - {self.position}"
+        return f"{self.id} - {self.username.first_name} {self.username.last_name} - {self.position}"
     
 class Work(models.Model):
     name = models.CharField(max_length=100) ### col for กิจกรรม
@@ -49,9 +49,9 @@ class Result(models.Model):
     term1 = models.PositiveIntegerField(default=0)
     term2 = models.PositiveIntegerField(default=0)
     total = models.PositiveIntegerField(default=0)
-    employee_score = models.PositiveIntegerField(default=0)
-    dean_score = models.PositiveIntegerField(default=0)
-    result_score = models.PositiveIntegerField(default=0)
+    employee_score = models.FloatField(default=0.0)
+    dean_score = models.FloatField(default=0.0)
+    result_score = models.FloatField(default=0.0)
     file = models.FileField(upload_to=user_directory_path, blank=True, null=True)
     # upload_time = models.DateTimeField(auto_now_add=True)
 
@@ -74,15 +74,14 @@ class Save(models.Model):
     work = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
     total = models.PositiveIntegerField(default=0)
-    employee_score = models.PositiveIntegerField(default=0)
-    dean_score = models.PositiveIntegerField(default=0)
-    result_score = models.PositiveIntegerField(default=0)
+    employee_score = models.FloatField(default=0.0)
+    dean_score = models.FloatField(default=0.0)
+    result_score = models.FloatField(default=0.0)
+
     file = models.FileField(upload_to=user_directory_path, blank=True, null=True)
     date = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
-        # Format the date before saving
-        self.date = timezone.now().strftime("%d %m %Y")
         self.result = self.total * self.dean_score
         super().save(*args, **kwargs)
     

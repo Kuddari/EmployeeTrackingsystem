@@ -28,7 +28,11 @@
                             <th data-filter="true" data-filter-type="select">เกณท์</th>
                             <th data-filter="true" data-filter-type="select">ผลรวม</th>
                             <th data-filter="true" data-filter-type="select">คะแนนอาจารย์</th>
+                            {% if user.employee.position == "Dean" %}
                             <th data-filter="true" data-filter-type="select">คะแนนคณบดี</th>
+                            {% else %}
+                            <th data-filter="true" data-filter-type="select" style="display: none;">คะแนนคณบดี</th>
+                            {% endif %}
                             <th id="sem2Header" data-filter="true" data-filter-type="select">ค่าคะแนนถ่วงน้ำหนัก</th>
                             <th id="sem2Header" data-filter="true" data-filter-type="select">File</th>
                         </tr>
@@ -46,14 +50,27 @@
                             <td class="text-center align-middle" style="width: 7%;">
                                 {{group_works.0.total}}
                             </td>
-                            <td class="align-middle">
-                                <input class="text-center" type="number" value="{{ group_works.0.employee_score }}" 
-                                name="employee_score_{{ group_works.0.id }}">
+                            <td  class="align-middle text-center">
+                                {% if user.employee.position == 'Dean' %}
+                                    {% if user.first_name == employee.username.first_name   %}
+                                    <input class="text-center" type="float" value="{{ group_works.0.employee_score }}" name="employee_score_{{ group_works.0.id }}">
+                                    {% else %}
+                                    {{ group_works.0.employee_score }}
+                                    {% endif %}
+                                {% else %}
+                                <input class="text-center" type="float" value="{{ group_works.0.employee_score }}" name="employee_score_{{ group_works.0.id }}">
+                                {% endif %}
                             </td>
+                            {% if user.employee.position == 'Dean' %}
                             <td  data-id="{{ group_works.0.work.id }}" class="text-center align-middle">
-                                <input class="text-center" type="number" value="{{ group_works.0.dean_score }}" 
-                                name="dean_score_{{ group_works.0.id }}">
+                                <input class="text-center" type="float" value="{{ group_works.0.dean_score }}" name="dean_score_{{ group_works.0.id }}">
                             </td>
+                            {% else %}
+                            <td  data-id="{{ group_works.0.work.id }}" class="text-center align-middle" style="display: none;">
+                                <input class="text-center" type="float" value="{{ group_works.0.dean_score }}" name="dean_score_{{ group_works.0.id }}">
+                            </td>
+                            {% endif %}
+                                
                             <td  data-id="{{ group_works.0.id }}" class="text-center align-middle">{{group_works.0.result_score}}</td>
                             <td class="text-center align-middle">
                             {% if group_works.0.file %}
@@ -79,16 +96,28 @@
                                         <td  class="text-center align-middle">
                                             {{work.total}}
                                         </td>
-                                        <td  class="align-middle">
-                                            <input class="text-center" type="number" value="{{ work.employee_score }}" 
-                                            name="employee_score_{{work.id}}">
+                                        <td  class="align-middle text-center">
+                                            {% if user.employee.position == 'Dean' %}
+                                                {% if user.first_name == employee.username.first_name   %}
+                                                <input class="text-center" type="float" value="{{ work.employee_score }}" name="employee_score_{{work.id}}">
+                                                {% else %}
+                                                {{ work.employee_score }}
+                                                {% endif %}
+                                            {% else %}
+                                            <input class="text-center" type="float" value="{{ work.employee_score }}" name="employee_score_{{work.id}}">
+                                            {% endif %}
                                         </td>
-                                        <td  class="align-middle">
-                                            <input class="text-center" type="number" value="{{ work.dean_score }}" 
-                                            name="dean_score_{{work.id}}">
+                                        {% if user.employee.position == 'Dean' %}
+                                        <td  class="align-middle text-center">
+                                            <input class="text-center" type="float" value="{{ work.dean_score }}"  name="dean_score_{{work.id}}">
                                         </td>
-                                        <td data-id="{{ work.work.id }}" class="text-center align-middle">
-                                            {{work.result_score}}
+                                        {% else %}
+                                        <td  class="align-middle text-center" style="display: none;">
+                                            <input class="text-center" type="float" value="{{ work.dean_score }}"  name="dean_score_{{work.id}}">
+                                        </td>
+                                        {% endif %}
+                                        <td data-id="{{ work.id }}" class="text-center align-middle">
+                                            {{work.result_score|floatformat:2 }}
                                         </td>
                                         <td class="text-center align-middle">
                                         {% if work.file %}
@@ -102,24 +131,19 @@
                                     <tr class="text-center align-middle">
                                         <td class="text-right" colspan="3">ผลรวม</td>
                                         <td>{{ total_sum }}</td>
-                                        <td>{{ score_sum }}</td>
+                                        <td colspan="4">{{ score_sum|floatformat:2 }}</td>
                                     </tr>
                                     <tr class="text-center align-middle">
-                                        <td class="text-left" colspan="2">สรุปคะแนนส่วนผลสัมฤทธิ์ของงาน = </td>
-                                        <td colspan="3"> ผลรวมของค่าคะแนนถ่วงน้ำหนัก...{{ score_sum }}..../5 =</td>
-                                        <td>{{ result_sum }}</td>
+                                        <td class="text-left" colspan="3">สรุปคะแนนส่วนผลสัมฤทธิ์ของงาน = </td>
+                                        <td colspan="3"> ผลรวมของค่าคะแนนถ่วงน้ำหนัก...{{ score_sum|floatformat:2 }}..../10 =</td>
+                                        <td colspan="2">{{ result_sum|floatformat:2 }}</td>
                                     </tr>
                         </tbody>
                         
                     </table>
-
-                    {% if user.employee.position == 'Dean' %}
                         <div class="d-flex justify-content-end mb-3">
                             <button type="submit" style="border-radius: 50px; font-size: 20px;">ยืนยัน</button>
                         </div>
-                    
-                        {% else %}
-                        {% endif %}
                 </form>
             
         </div>

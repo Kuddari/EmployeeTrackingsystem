@@ -14,6 +14,7 @@ class Employee(models.Model):
         ('Researcher', 'Researcher'),
     ]
     position = models.CharField(max_length=50, choices=POSITION_CHOICES)
+    profile = models.FileField(upload_to='profile/', blank=True, null=True)
            
     def __str__(self):
         return f"{self.username.first_name} {self.username.last_name} - {self.position}"

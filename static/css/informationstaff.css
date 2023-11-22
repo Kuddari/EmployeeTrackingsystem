@@ -29,16 +29,58 @@ h1,h2,h3,h4,h5,h6,p,a {
     border: 3px solid #00509D;
 }
 
+.infor h3 {
+    margin-top: 10px;
+}
+
+.infor .h3 {
+    margin-top: 10px;
+}
+
 .infor a:hover {
     color: #0078d4;
 }
 
 .infor img {
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
     border-radius: 50px;
 }
 
+.custom-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-dropdown .selected-option {
+    color: #00509D;
+    padding: 5px;
+    cursor: pointer;
+    margin-top: -3px;
+    text-underline-offset: 6px;
+    text-decoration: underline  dotted black;
+}
+
+.custom-dropdown .selected-option:focus {
+    outline: none;
+}
+
+.custom-dropdown .options {
+    display: none;
+    color: #00509D;
+    position: absolute;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.custom-dropdown .options li {
+    padding: 8px;
+    cursor: pointer;
+}
 
 
 @media (max-width: 992px) {
@@ -57,16 +99,23 @@ h1,h2,h3,h4,h5,h6,p,a {
     }
 
     .infor h3 {
-        font-size: 22px;
+        font-size: 18px;
     }
 
     .infor .h3 {
-        font-size: 22px;
+        font-size: 18px;
     }
 
     .infor img {
-        width: 30px;
-        height: 30px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .custom-dropdown .selected-option {
+        color: #00509D;
+        padding: 5px;
+        cursor: pointer;
+        margin-top: -5px;
     }
 
 }
@@ -83,21 +132,27 @@ h1,h2,h3,h4,h5,h6,p,a {
         font-size: 26px;
         padding: 5px 10px;
     }
-    .infor {
-        margin: 1px;
-    }
 
     .infor h3 {
-        font-size: 20px;
+        margin-top: 8px;
+        font-size: 14px;
     }
 
     .infor .h3 {
-        font-size: 20px;
+        margin-top: 8px;
+        font-size: 14px;
     }
 
     .infor img {
         width: 30px;
         height: 30px;
+    }
+
+    .custom-dropdown .selected-option {
+        color: #00509D;
+        padding: 5px;
+        cursor: pointer;
+        margin-top: -4px;
     }
 
 }
@@ -108,21 +163,28 @@ h1,h2,h3,h4,h5,h6,p,a {
         padding: 5px 8px;
        
     }
-    .infor {
-        margin: 1px;
-    }
+  
 
     .infor h3 {
-        font-size: 18px;
+        /* margin-top: 8px; */
+        font-size: 12px;
     }
 
     .infor .h3 {
-        font-size: 18px;
+        /* margin-top: 8px; */
+        font-size: 12px;
     }
 
     .infor img {
-        width: 30px;
-        height: 30px;
+        padding: 0px;
+        width: 25px;
+        height: 25px;
+    }
+    .custom-dropdown .selected-option {
+        color: #00509D;
+        padding: 5px;
+        cursor: pointer;
+        margin-top: -4px;
     }
 
 }

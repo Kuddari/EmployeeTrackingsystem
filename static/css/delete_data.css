@@ -1,0 +1,14 @@
+h1,h2,h3,h4,h5,h6,p,td,th {
+    color: #00509D;
+}
+
+button {
+    background-color: #D7E3FC;
+    margin-top: 1%;
+    font-size: 20px;
+    border-radius: 50px;
+    border: 0px;
+    padding: 7px 15px;
+    color: #00509D;
+    font-weight: bold;
+}

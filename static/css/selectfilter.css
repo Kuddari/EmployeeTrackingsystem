@@ -101,8 +101,9 @@ input:checked + .slider:before {
 
 @media (max-width: 600px) {
     .color {
-        font-size: 28px;
+        font-size: 25px;
         width: 250px;
+        padding: 10px;
     }
 
     .dec {

@@ -310,8 +310,8 @@ def work_history_view(request):
 
 
     # Convert start_date and end_date to datetime objects
-    start_date = datetime.strptime(start_date, '%d-%m-%Y') if start_date else None
-    end_date = datetime.strptime(end_date, '%d-%m-%Y') if end_date else None
+    start_date = datetime.strptime(start_date, '%d/%m/%Y') if start_date else None
+    end_date = datetime.strptime(end_date, '%d/%m/%Y') if end_date else None
 
 
     if start_date:

@@ -16,12 +16,12 @@
     <div class="filter-bar">
         <div class="filter-dropdown">
             <!-- <label for="start_date">Start Date:</label> -->
-            <input type="text" class="form-control datepicker" id="start_date" placeholder="วันเริ่มต้น" name="start_date" value="{{ start_date|date:'%Y-%m-%d' }}">
+            <input type="text" class="form-control datepicker" id="start_date" placeholder="วันเริ่มต้น" name="start_date" value="{{ start_date|date:'%d/%m/%Y' }}">
 
         </div>
         <div class="filter-dropdown">
             <!-- <label for="end_date">End Date:</label> -->
-            <input type="text" class="form-control datepicker" id="end_date" placeholder="วันสิ้นสุด" name="end_date" value="{{ end_date|date:'%Y-%m-%d' }}">
+            <input type="text" class="form-control datepicker" id="end_date" placeholder="วันสิ้นสุด" name="end_date" value="{{ end_date|date:'%d/%m/%Y' }}">
         </div>
         <div class="filter-dropdown">
             <!-- <label for="employeeFilter">Select employee:</label> -->
@@ -60,7 +60,7 @@
             <tbody>
                 {% for workdata in workdata_history %}
                 <tr>
-                    <td class="text-center align-middle" style="width: 8%;">{{ workdata.date|date:'Y-m-d' }}</td>
+                    <td class="text-center align-middle" style="width: 8%;">{{ workdata.date|date:'d/m/Y' }}</td>
                     <td class="text-center align-middle" style="width: 10%;">{{ workdata.employee_id}}</td>
                     <td class="text-center align-middle" style="width: 15%;">{{ workdata.employee_firstname }} {{ workdata.employee_lastname }}</td>
                     <td class="align-middle"> {{ workdata.work }} </td> 

@@ -14,8 +14,13 @@
     <div class="container">
         <div class="row mt-4">
             <div class="col-6 col-lg-6 d-flex justify-content-start">
-                
-                <h2 class="color">{{ position }}</h2>
+                {% if position == 'Dean' %}
+                <h2 class="color">คณบดี</h2>
+                {% elif position == 'Lecturer' %}
+                <h2 class="color">รองคณบดี</h2>
+                {% else %}
+                <h2 class="color">อาจารย์</h2>
+                {% endif %}
              
 
             </div>
@@ -28,19 +33,31 @@
         </div>
         {% for text in employees %}
         <div class="row mt-5 infor">
-            <div class="col-1 d-flex justify-content-center">
+            <div class="col-1 d-flex justify-content-center h3">
                 <h3 class="mt-1 dynamicNumber">1.</h3>
             </div>
+            {% if text.profile  %}
+            <div class="col-1 d-flex justify-content">
+                <img class="mt-1" src="{{ text.profile.url }}" alt="50*50">
+            </div>
+            {% else %}
+            <div class="col-1 d-flex justify-content">
+                <img class="mt-1" src="{% static 'images/ftu_logo-removebg-preview.png' %}" alt="50*50">
+            </div>
+            {% endif %}
 
-            <div class="col-2 d-flex justify-content">
-                <img class="mt-1" src="https://media.istockphoto.com/id/517188688/th/%E0%B8%A3%E0%B8%B9%E0%B8%9B%E0%B8%96%E0%B9%88%E0%B8%B2%E0%B8%A2/%E0%B8%A0%E0%B8%B9%E0%B8%A1%E0%B8%B4%E0%B8%97%E0%B8%B1%E0%B8%A8%E0%B8%99%E0%B9%8C%E0%B8%A0%E0%B8%B9%E0%B9%80%E0%B8%82%E0%B8%B2.jpg?s=612x612&w=0&k=20&c=jreXJAxTVORbxURWML1sikQH5SGBbUdb8sL728vnalI=" alt="50*50">
-            </div>
-            <div class="col-5">
-                <h3 class="d-flex justify-content-center mt-1">{{text.username.first_name}} {{text.username.last_name}}</h3>
-            </div>
-            
             <div class="col-4">
-                <a class="h3 d-flex justify-content-end mt-1" href="{% url 'report' text.id %}">รายละเอียดงาน</a>
+                <h3 class="d-flex justify-content-center">{{text.username.first_name}} {{text.username.last_name}}</h3>
+            </div>
+            <div class="custom-dropdown col-3 h3 d-flex justify-content-center" data-employee-id="{{ text.id }}">
+                <div class="selected-option">Select Status</div>
+                <ul class="options">
+                    <li data-value="1">ยังไม่ตรวจ</li>
+                    <li data-value="2">เรียบร้อย</li>
+                </ul>
+            </div>
+            <div class="col-3">
+                <a class="h3 d-flex justify-content-end" href="{% url 'report' text.id %}">รายละเอียดงาน</a>
             </div>
            
         </div>
@@ -70,9 +87,60 @@
                 });
             });
         </script>
-        
-    
    
-    
+   <script>
+    $(document).ready(function () {
+        // Select all elements with the class 'custom-dropdown' and iterate over them
+        $('.custom-dropdown').each(function () {
+            const dropdown = $(this);
+            const employeeId = dropdown.data('employee-id');
+
+            // Handle the click event to show/hide the options
+            dropdown.find('.selected-option').click(function () {
+                dropdown.find('.options').toggle();
+            });
+
+            // Handle the click event on options
+            dropdown.find('.options li').click(function () {
+                const selectedValue = $(this).data('value');
+                const selectedText = $(this).text();
+
+                // Implement logic to update the status on the server (e.g., using AJAX)
+
+                // Update the selected option
+                dropdown.find('.selected-option').text(selectedText);
+
+                // Store the selected status in local storage
+                storeSelectedStatus(employeeId, selectedValue);
+
+                // Hide the options
+                dropdown.find('.options').hide();
+            });
+
+            // Set the initial value of the dropdown based on the stored value or get it from the server
+            const storedStatus = getStoredStatus(employeeId);
+            const initialStatus = storedStatus !== null ? storedStatus : getEmployeeStatus(employeeId);
+            dropdown.find('.selected-option').text(initialStatus === '1' ? 'ยังไม่ตรวจ' : 'เรียบร้อย');
+
+        });
+    });
+
+    // Implement a function to get the stored status from local storage
+    function getStoredStatus(employeeId) {
+        return localStorage.getItem('status_' + employeeId);
+    }
+
+    // Implement a function to store the selected status in local storage
+    function storeSelectedStatus(employeeId, selectedStatus) {
+        localStorage.setItem('status_' + employeeId, selectedStatus);
+    }
+
+    // Implement a function to get the employee status from the server
+    function getEmployeeStatus(employeeId) {
+  
+        return Math.random() < 0.5 ? '1' : '2';
+    }
+</script>
+
 </body>
 </html>

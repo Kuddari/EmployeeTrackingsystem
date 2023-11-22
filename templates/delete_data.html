@@ -4,14 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>หน้าลบข้อมูลรายปี</title>
+    <title>ลบข้อมูลรายปี</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/delete_data.css' %}">
 </head>
 <body>
-   
-    <h2>Delete Data</h2>
+   <div class="container text-center mt-5">
+    <h2>ลบข้อมูลทั้งหมด</h2>
     <form method="post">
         {% csrf_token %}
-        <button type="submit">Delete All Data</button>
+        <button type="submit">ยืนยันลบข้อมูลทั้งหมด</button>
     </form>
+</div>
 </body>
 </html>

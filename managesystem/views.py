@@ -249,25 +249,39 @@ def conclusion_view(request, employee_id):
     results = Result.objects.filter(employee=employee)
     grouped_works = {key: list(group) for key, group in itertools.groupby(results, key=lambda x: x.work.name.name)}
     total_sum = (results.aggregate(Sum('total'))['total__sum'] or 0)
-    score_sum = (results.aggregate(Sum('result'))['result__sum'] or 0)
+    score_sum = (results.aggregate(Sum('result_score'))['result_score__sum'] or 0)
     result_sum = int(score_sum / 5)
+    
     if request.method == 'POST':
-        for result in results:
+         for group_name, group_works in grouped_works.items():
+            for work in group_works:
+                employee_score = request.POST.get(f'employee_score_{work.id}')
+                dean_score = request.POST.get(f'dean_score_{work.id}')  
+                dean_score = int(dean_score) if dean_score.isdigit() else 0              
+                userresult, created = Result.objects.get_or_create(employee=employee, work=work.work)
+                # Update or create minunit and maxunit values
+                userresult.employee_score = employee_score
+                userresult.dean_score = dean_score
+                userresult.result_score = work.total * dean_score
+           
 
-        # Create a new Save object
-            save_obj = Save(
-                employee_id = result.employee.username,
-                employee_firstname = result.employee.username.first_name,
-                employee_lastname = result.employee.username.last_name,
-                work=result.work.name.name,
-                description=result.work.name.description,
-                unit=result.work.minunit,
-                total=result.total,
-                score=result.result,
-                file=result.file, 
-            )
-            save_obj.save()
-        return HttpResponseRedirect(reverse('selectfilter'))
+                userresult.save()
+            if work.employee_score != 0:
+                for result in results:
+                    save_obj = Save(
+                        employee_id = result.employee.username,
+                        employee_firstname = result.employee.username.first_name,
+                        employee_lastname = result.employee.username.last_name,
+                        work=result.work.name.name,
+                        description=result.work.name.description,
+                        total=result.total,
+                        employee_score = result.employee_score,
+                        dean_score = work.total * dean_score,
+                        result_score = result.result_score,
+                        file=result.file, 
+                    )
+                    save_obj.save()
+            return HttpResponseRedirect(reverse('selectfilter'))
 
     context = {
         'grouped_works': grouped_works,

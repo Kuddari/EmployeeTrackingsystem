@@ -20,3 +20,13 @@ button {
     font-weight: bold;
 }
 
+input {
+    background: none; 
+    border: none;
+    width: 100%;
+}
+
+input:focus {
+    outline: none;
+}
+

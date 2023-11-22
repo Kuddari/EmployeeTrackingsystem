@@ -49,14 +49,16 @@ class Result(models.Model):
     term1 = models.PositiveIntegerField(default=0)
     term2 = models.PositiveIntegerField(default=0)
     total = models.PositiveIntegerField(default=0)
-    result = models.PositiveIntegerField(default=0)
+    employee_score = models.PositiveIntegerField(default=0)
+    dean_score = models.PositiveIntegerField(default=0)
+    result_score = models.PositiveIntegerField(default=0)
     file = models.FileField(upload_to=user_directory_path, blank=True, null=True)
     # upload_time = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         # Calculate the total before saving
         self.total = self.term1 + self.term2
-        self.result = self.total * self.work.minunit
+        self.result = self.total * self.dean_score
         super().save(*args, **kwargs)
 
 
@@ -71,15 +73,17 @@ class Save(models.Model):
     employee_lastname = models.CharField(max_length=30)
     work = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
-    unit = models.PositiveIntegerField(default=0)
     total = models.PositiveIntegerField(default=0)
-    score = models.PositiveIntegerField(default=0)
+    employee_score = models.PositiveIntegerField(default=0)
+    dean_score = models.PositiveIntegerField(default=0)
+    result_score = models.PositiveIntegerField(default=0)
     file = models.FileField(upload_to=user_directory_path, blank=True, null=True)
     date = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         # Format the date before saving
         self.date = timezone.now().strftime("%d %m %Y")
+        self.result = self.total * self.dean_score
         super().save(*args, **kwargs)
     
     def __str__(self):

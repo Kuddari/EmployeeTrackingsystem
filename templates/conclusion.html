@@ -27,6 +27,8 @@
                             <th data-filter="true" data-filter-type="select">ตัวชี้วัด / เกณฑ์การประเมิน</th>
                             <th data-filter="true" data-filter-type="select">เกณท์</th>
                             <th data-filter="true" data-filter-type="select">ผลรวม</th>
+                            <th data-filter="true" data-filter-type="select">คะแนนอาจารย์</th>
+                            <th data-filter="true" data-filter-type="select">คะแนนคณบดี</th>
                             <th id="sem2Header" data-filter="true" data-filter-type="select">ค่าคะแนนถ่วงน้ำหนัก</th>
                             <th id="sem2Header" data-filter="true" data-filter-type="select">File</th>
                         </tr>
@@ -44,7 +46,15 @@
                             <td class="text-center align-middle" style="width: 7%;">
                                 {{group_works.0.total}}
                             </td>
-                            <td  data-id="{{ group_works.0.id }}" class="text-center align-middle">{{group_works.0.result}}</td>
+                            <td class="align-middle">
+                                <input class="text-center" type="number" value="{{ group_works.0.employee_score }}" 
+                                name="employee_score_{{ group_works.0.id }}">
+                            </td>
+                            <td  data-id="{{ group_works.0.work.id }}" class="text-center align-middle">
+                                <input class="text-center" type="number" value="{{ group_works.0.dean_score }}" 
+                                name="dean_score_{{ group_works.0.id }}">
+                            </td>
+                            <td  data-id="{{ group_works.0.id }}" class="text-center align-middle">{{group_works.0.result_score}}</td>
                             <td class="text-center align-middle">
                             {% if group_works.0.file %}
                                 <a href="{% url 'download_file' group_works.0.id %}">ดาวน์โหลด</a>
@@ -69,8 +79,16 @@
                                         <td  class="text-center align-middle">
                                             {{work.total}}
                                         </td>
+                                        <td  class="align-middle">
+                                            <input class="text-center" type="number" value="{{ work.employee_score }}" 
+                                            name="employee_score_{{work.id}}">
+                                        </td>
+                                        <td  class="align-middle">
+                                            <input class="text-center" type="number" value="{{ work.dean_score }}" 
+                                            name="dean_score_{{work.id}}">
+                                        </td>
                                         <td data-id="{{ work.work.id }}" class="text-center align-middle">
-                                            {{work.result}}
+                                            {{work.result_score}}
                                         </td>
                                         <td class="text-center align-middle">
                                         {% if work.file %}

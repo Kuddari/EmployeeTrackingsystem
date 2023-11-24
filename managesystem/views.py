@@ -76,7 +76,7 @@ def informationstaff_view(request):
 
 def informationuser_view(request):
     employee = Employee.objects.get(username=request.user)
-    results = Result.objects.all()
+    results = Result.objects.filter(employee=employee)
     
     grouped_works = {key: list(group) for key, group in itertools.groupby(results, key=lambda x: x.work.name.name)}
     
@@ -246,7 +246,7 @@ def delete_data_view(request):
     # Render a template with a button to trigger the deletion
     return render(request, 'delete_data.html')
 
-def conclusion_view(request, employee_id):
+def conclusion(request, employee_id):
     employee = get_object_or_404(Employee, id=employee_id)
     results = Result.objects.filter(employee=employee)
     grouped_works = {key: list(group) for key, group in itertools.groupby(results, key=lambda x: x.work.name.name)}
@@ -265,22 +265,10 @@ def conclusion_view(request, employee_id):
                 userresult.dean_score = dean_score
                 userresult.result_score = work.total * dean_score
                 userresult.save()
-        if work.employee_score != float(0):
-                for result in results:
-                    save_obj = Save(
-                        employee_id = result.employee.username,
-                        employee_firstname = result.employee.username.first_name,
-                        employee_lastname = result.employee.username.last_name,
-                        work=result.work.name.name,
-                        description=result.work.name.description,
-                        total=result.total,
-                        employee_score = result.employee_score,
-                        dean_score = work.total * dean_score,
-                        result_score = result.result_score,
-                        file=result.file, 
-                    )
-                    save_obj.save()        
-        return HttpResponseRedirect(reverse('selectfilter'))
+        if request.user.employee.position == 'Dean':
+            return HttpResponseRedirect(reverse('conclusion_view', args=[employee.id]))
+        else :
+            return HttpResponseRedirect(reverse('selectfilter'))
 
     context = {
         'grouped_works': grouped_works,
@@ -291,6 +279,41 @@ def conclusion_view(request, employee_id):
     }
 
     return render(request,"conclusion.html", context)
+
+def conclusion_view (request, employee_id):
+    employee = get_object_or_404(Employee, id=employee_id)
+    results = Result.objects.filter(employee=employee)
+    grouped_works = {key: list(group) for key, group in itertools.groupby(results, key=lambda x: x.work.name.name)}
+    if request.method == 'POST':
+        if Result.dean_score != float(0):
+            for result in results:
+                save_obj = Save(
+                    employee_id = result.employee.username,
+                    employee_firstname = result.employee.username.first_name,
+                    employee_lastname = result.employee.username.last_name,
+                    work=result.work.name.name,
+                    description=result.work.name.description,
+                    total=result.total,
+                    employee_score = result.employee_score,
+                    dean_score = result.dean_score,
+                    result_score = result.result_score,
+                    file=result.file, 
+                )
+                save_obj.save() 
+        return HttpResponseRedirect(reverse('selectfilter'))
+ 
+    total_sum = (results.aggregate(Sum('total'))['total__sum'] or 0)
+    score_sum = (results.aggregate(Sum('result_score'))['result_score__sum'] or 0)
+    result_sum = float(score_sum / 10)
+    context = {
+        'grouped_works': grouped_works,
+        'employee': employee,
+        'total_sum': total_sum,
+        'score_sum': score_sum,
+        'result_sum': result_sum
+    }
+
+    return render(request,"conclusion_view.html", context)
 
 def download_file_view(request, result_id):
     # Try to get the result from the Result model

@@ -8,12 +8,12 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/conclusion.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <title>หน้าสรุปผลประเมิน</title>
+    <title>สรุปผลประเมิน</title>
 </head>
 <body>
 
     <div class="container mt-5">
-        <h3 class="text-center mb-3">สรุปคะแนน</h3>
+        <h3 class="text-center mb-3">ยืนยันสรุปคะแนน</h3>
         <div class="text-center">
         <h3 class="mb-4 name">{{employee.username.first_name}} {{employee.username.last_name}}</h3>
     </div>
@@ -28,13 +28,9 @@
                             <th data-filter="true" data-filter-type="select">เกณท์</th>
                             <th data-filter="true" data-filter-type="select">ผลรวม</th>
                             <th data-filter="true" data-filter-type="select">คะแนนอาจารย์</th>
-                            {% if user.employee.position == "Dean" %}
                             <th data-filter="true" data-filter-type="select">คะแนนคณบดี</th>
-                            {% else %}
-                            <th data-filter="true" data-filter-type="select" style="display: none;">คะแนนคณบดี</th>
-                            {% endif %}
                             <th id="sem2Header" data-filter="true" data-filter-type="select">ค่าคะแนนถ่วงน้ำหนัก</th>
-                            <th id="sem2Header" data-filter="true" data-filter-type="select">File</th>
+                            <th id="sem2Header" data-filter="true" data-filter-type="select" style="display: none;">File</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,28 +47,14 @@
                                 {{group_works.0.total}}
                             </td>
                             <td  class="align-middle text-center">
-                                {% if user.employee.position == 'Dean' %}
-                                    {% if user.first_name == employee.username.first_name   %}
-                                    <input class="text-center" type="number" step="0.1" min="0" max="5" value="{{ group_works.0.employee_score }}" name="employee_score_{{ group_works.0.id }}">
-                                    {% else %}
-                                    {{ group_works.0.employee_score }}
-                                    {% endif %}
-                                {% else %}
-                                <input class="text-center" type="number" step="0.1" min="0" max="5" value="{{ group_works.0.employee_score }}" name="employee_score_{{ group_works.0.id }}">
-                                {% endif %}
+                                {{ group_works.0.employee_score }}
                             </td>
-                            {% if user.employee.position == 'Dean' %}
                             <td  data-id="{{ group_works.0.work.id }}" class="text-center align-middle">
-                                <input class="text-center" type="number" step="0.1" min="0" max="5" value="{{ group_works.0.dean_score }}" name="dean_score_{{ group_works.0.id }}">
+                                {{ group_works.0.dean_score }}
                             </td>
-                            {% else %}
-                            <td  data-id="{{ group_works.0.work.id }}" class="text-center align-middle" style="display: none;">
-                                <input class="text-center" type="number" step="0.1" min="0" max="5" value="{{ group_works.0.dean_score }}" name="dean_score_{{ group_works.0.id }}">
-                            </td>
-                            {% endif %}
                                 
                             <td  data-id="{{ group_works.0.id }}" class="text-center align-middle">{{group_works.0.result_score}}</td>
-                            <td class="text-center align-middle">
+                            <td class="text-center align-middle" style="display: none;">
                             {% if group_works.0.file %}
                                 <a href="{% url 'download_file' group_works.0.id %}">ดาวน์โหลด</a>
                             {% else %}
@@ -88,6 +70,7 @@
                                         
                                         <td>{{ work.work.name.description }}</td>
                                         
+                                            
                                             <td class="text-center align-middle" style="width: 10%;">
                                                 ({{work.work.minunit}} - {{work.work.maxunit}}) 
                                             </td>
@@ -95,30 +78,17 @@
                                         <td  class="text-center align-middle">
                                             {{work.total}}
                                         </td>
+                                        <td  class="align-middle text-center">  
+                                            {{ work.employee_score }}
+                                        </td> 
                                         <td  class="align-middle text-center">
-                                            {% if user.employee.position == 'Dean' %}
-                                                {% if user.first_name == employee.username.first_name   %}
-                                                <input class="text-center" type="number" step="0.1" min="0" max="5" value="{{ work.employee_score }}" name="employee_score_{{work.id}}">
-                                                {% else %}
-                                                {{ work.employee_score }}
-                                                {% endif %}
-                                            {% else %}
-                                            <input class="text-center" type="number" step="0.1" min="0" max="5" value="{{ work.employee_score }}" name="employee_score_{{work.id}}">
-                                            {% endif %}
+                                            {{ work.dean_score }}
                                         </td>
-                                        {% if user.employee.position == 'Dean' %}
-                                        <td  class="align-middle text-center">
-                                            <input class="text-center" type="number" step="0.1" min="0" max="5" value="{{ work.dean_score }}"  name="dean_score_{{work.id}}">
-                                        </td>
-                                        {% else %}
-                                        <td  class="align-middle text-center" style="display: none;">
-                                            <input class="text-center" type="number" step="0.1" min="0" max="5" value="{{ work.dean_score }}"  name="dean_score_{{work.id}}">
-                                        </td>
-                                        {% endif %}
+                    
                                         <td data-id="{{ work.id }}" class="text-center align-middle">
                                             {{work.result_score|floatformat:1 }}
                                         </td>
-                                        <td class="text-center align-middle">
+                                        <td class="text-center align-middle" style="display: none;">
                                         {% if work.file %}
                                             <a href="{% url 'download_file' work.id %}">ดาวน์โหลด</a>
                                         {% else %}
@@ -127,35 +97,17 @@
                                     </tr>
                                     {% endfor %}
                                     {% endfor %}
-                                    {% if user.employee.position == 'Dean' %} 
                                     <tr class="text-center align-middle">
                                         <td class="text-right" colspan="3">ผลรวม</td>
                                         <td>{{ total_sum }}</td>
                                         <td colspan="2"></td>
                                         <td>{{ score_sum|floatformat:1 }}</td>
-                                        <td></td>
                                     </tr>
                                     <tr class="text-center align-middle">
                                         <td class="text-left" colspan="3">สรุปคะแนนส่วนผลสัมฤทธิ์ของงาน = </td>
                                         <td colspan="3"> ผลรวมของค่าคะแนนถ่วงน้ำหนัก...{{ score_sum|floatformat:2 }}..../10 =</td>
-                                        <td colspan="1">{{ result_sum|floatformat:1 }}</td>
-                                        <td></td>
+                                        <td colspan="2">{{ result_sum|floatformat:1 }}</td>
                                     </tr>
-                                    {% else %}
-                                    <tr class="text-center align-middle">
-                                        <td class="text-right" colspan="3">ผลรวม</td>
-                                        <td>{{ total_sum }}</td>
-                                        <td></td>
-                                        <td>{{ score_sum|floatformat:1 }}</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr class="text-center align-middle">
-                                        <td class="text-left" colspan="3">สรุปคะแนนส่วนผลสัมฤทธิ์ของงาน = </td>
-                                        <td colspan="2"> ผลรวมของค่าคะแนนถ่วงน้ำหนัก...{{ score_sum|floatformat:2 }}..../10 =</td>
-                                        <td>{{ result_sum|floatformat:1 }}</td>
-                                        <td></td>
-                                    </tr>
-                                    {% endif %}
                         </tbody>
                         
                     </table>

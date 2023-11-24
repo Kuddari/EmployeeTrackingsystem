@@ -18,7 +18,11 @@
     {% endfor %}
     <div class="container text-center">
         <h2 class="name">{{user.first_name}} {{user.last_name}}</h2>
-        <img class="images" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdfcTjke0ma-YjGc4jtV2nnwcarM9Mw045WA&usqp=CAU" alt="80*80">
+        {% if user.employee.profile  %}
+            <img class="images" src="{{ user.employee.profile.url }}" alt="50*50">
+        {% else %}
+            <img class="mt-1" src="{% static 'images/ftu_logo-removebg-preview.png' %}" alt="50*50">
+        {% endif %}
     
         <div class="row mt-4">
             

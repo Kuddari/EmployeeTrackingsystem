@@ -18,8 +18,7 @@
         <h3 class="mb-4 name">{{employee.username.first_name}} {{employee.username.last_name}}</h3>
     </div>
         <div class="table-responsive">
-            <form action="" method="POST">
-                {% csrf_token %}
+           
                 <table id="workdata-table" class="table table-bordered">
                     <thead class="thead-dark">
                         <tr class="text-center align-middle">
@@ -112,11 +111,7 @@
                         </tbody>
                         
                     </table>
-                                <div class="d-flex justify-content-end mb-3">
-                                    <button type="submit" style="border-radius: 50px; font-size: 20px;">ยืนยัน</button>
-                                </div>
-                        
-                </form>
+   
             
         </div>
     </div>

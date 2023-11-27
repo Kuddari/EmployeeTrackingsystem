@@ -336,6 +336,24 @@ def download_file_view(request, result_id):
 
     return response
 
+def Final (request, employee_id):
+    employee = get_object_or_404(Employee, id=employee_id)
+    results = Result.objects.filter(employee=employee)
+    grouped_works = {key: list(group) for key, group in itertools.groupby(results, key=lambda x: x.work.name.name)}
+    total_sum = (results.aggregate(Sum('total'))['total__sum'] or 0)
+    score_sum = (results.aggregate(Sum('result_score'))['result_score__sum'] or 0)
+    result_sum = float(score_sum / 10)
+    context = {
+        'grouped_works': grouped_works,
+        'employee': employee,
+        'total_sum': total_sum,
+        'score_sum': score_sum,
+        'result_sum': result_sum
+    }
+
+    return render(request,"final.html", context)
+
+
 def work_history_view(request):
     workdata_history = Save.objects.all()
     start_date = request.GET.get('start_date')

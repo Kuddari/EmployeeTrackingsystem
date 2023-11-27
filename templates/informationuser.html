@@ -12,16 +12,13 @@
     
 </head>
 <body>
-    
-    {% for file in files %}
-    {{file.file}}
-    {% endfor %}
+ 
     <div class="container text-center">
         <h2 class="name">{{user.first_name}} {{user.last_name}}</h2>
         {% if user.employee.profile  %}
             <img class="images" src="{{ user.employee.profile.url }}" alt="50*50">
         {% else %}
-            <img class="mt-1" src="{% static 'images/ftu_logo-removebg-preview.png' %}" alt="50*50">
+            <img class="images" src="{% static 'images/ftu_logo-removebg-preview.png' %}" alt="50*50">
         {% endif %}
     
         <div class="row mt-4">

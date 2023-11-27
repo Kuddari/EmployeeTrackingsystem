@@ -63,9 +63,22 @@
         </table>
 
         </div>
-        <div class="text-right">
-        <a class="color" href=" {% url 'conclusion' employee.id %} ">สรุปคะแนน</a>
-    </div>
+        {% for result in results %}
+        {% if result.term2 > 0 %}
+            {% if result.dean_score > 0 %}
+            <div class="text-right">
+                <a class="color" href=" {% url 'final_conclusion' employee.id %} ">สรุปคะแนน</a>
+            </div>
+            {% else %}
+            <div class="text-right">
+                <a class="color" href=" {% url 'conclusion' employee.id %} ">กรอกคะแนนประเมิน</a>
+            </div>
+            {% endif %}
+        {% else %}
+        
+        {% endif %}
+        {% endfor %}
+            
     </div>
             
        

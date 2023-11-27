@@ -14,6 +14,7 @@ urlpatterns = [
     path('delete_data/', views.delete_data_view, name='delete_data'),
     path('conclusion/<int:employee_id>/', views.conclusion, name='conclusion'),
     path('conclusion_view/<int:employee_id>/', views.conclusion_view, name='conclusion_view'),
+     path('final_conclusion/<int:employee_id>/', views.Final, name='final_conclusion'),
     path('download_file/<int:result_id>/', views.download_file_view, name='download_file'),
     path('work_history/', views.work_history_view, name='work_history'),
 ]

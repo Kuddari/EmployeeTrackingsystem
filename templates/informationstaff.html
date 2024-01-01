@@ -16,9 +16,9 @@
             <div class="col-6 col-lg-6 d-flex justify-content-start">
                 {% if position == 'Dean' %}
                 <h2 class="color">คณบดี</h2>
-                {% elif position == 'Lecturer' %}
-                <h2 class="color">รองคณบดี</h2>
                 {% elif position == 'Researcher' %}
+                <h2 class="color">รองคณบดี</h2>
+                {% elif position == 'Lecturer' %}
                 <h2 class="color">อาจารย์</h2>
                 {% else %}
                 <h2 class="color">ทั้งหมด</h2>
@@ -40,12 +40,12 @@
             </div>
             {% if text.profile  %}
             <div class="col-1 d-flex justify-content">
-                <img class="mt-1" src="{{ text.profile.url }}" alt="50*50">
+                <img src="{{ text.profile.url }}" alt="40*40">
             </div>
             
             {% else %}
             <div class="col-1 d-flex justify-content">
-                <img class="mt-1" src="{% static 'images/ftu_logo-removebg-preview.png' %}" alt="50*50">
+                <img src="{% static 'images/ftu_logo-removebg-preview.png' %}" alt="40*40">
             </div>
             {% endif %}
 

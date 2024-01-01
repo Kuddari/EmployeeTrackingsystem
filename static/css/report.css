@@ -33,3 +33,11 @@ h1,h2,h3,h4,h5,h6,p,td,th,a {
         font-weight: bold;
     }
 }
+
+
+@media (max-width: 600px) {
+
+    .color {
+        font-size: 14px;
+    }
+}

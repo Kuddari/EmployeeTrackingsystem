@@ -1,17 +1,21 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import login,authenticate
-from django.contrib.auth.decorators import login_required
-from django.urls import reverse
-from django.shortcuts import get_object_or_404
-from django.db.models import Sum
-from django.http import HttpResponse, HttpResponseRedirect,Http404,HttpResponseBadRequest
-from django.contrib import messages
-from django.contrib.auth.models import User
-from .models import *
 import itertools
-from django.core.paginator import Paginator
-from datetime import datetime
+import os
+from collections import Counter
+from datetime import datetime, timedelta
 
+import matplotlib.pyplot as plt
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.core.paginator import Paginator
+from django.db.models import Case, Count, Sum, When
+from django.http import (Http404, HttpResponse, HttpResponseBadRequest,
+                         HttpResponseRedirect)
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+
+from .models import *
 
 
 def login_view(request):
@@ -240,6 +244,11 @@ def delete_data_view(request):
         # Delete all records in the Result table
         Result.objects.all().delete()
 
+        five_years_ago = datetime.now() - timedelta(days=6 * 365)
+
+        # Delete records in the Save table older than 5 years
+        Save.objects.filter(date__lt=five_years_ago).delete()
+
         # Redirect to a success page or any other page you desire
         return redirect('informationstaff')
 
@@ -252,7 +261,7 @@ def conclusion(request, employee_id):
     grouped_works = {key: list(group) for key, group in itertools.groupby(results, key=lambda x: x.work.name.name)}
     total_sum = (results.aggregate(Sum('total'))['total__sum'] or 0)
     score_sum = (results.aggregate(Sum('result_score'))['result_score__sum'] or 0)
-    result_sum = float(score_sum / 10)
+    result_sum = float(score_sum / total_sum)
     
     if request.method == 'POST':
         for group_name, group_works in grouped_works.items():
@@ -260,10 +269,13 @@ def conclusion(request, employee_id):
                 employee_score = float(request.POST.get(f'employee_score_{work.id}',0))
                 dean_score = float(request.POST.get(f'dean_score_{work.id}',0))
                 userresult, created = Result.objects.get_or_create(employee=employee, work=work.work)
+                file = request.FILES.get(f'fileInput_{work.id}')  # Get the uploaded file
                 # Update or create minunit and maxunit values
                 userresult.employee_score = employee_score
                 userresult.dean_score = dean_score
                 userresult.result_score = work.total * dean_score
+                if file:  # If a file is uploaded
+                    userresult.file = file
                 userresult.save()
         if request.user.employee.position == 'Dean':
             return HttpResponseRedirect(reverse('conclusion_view', args=[employee.id]))
@@ -286,6 +298,10 @@ def conclusion_view (request, employee_id):
     grouped_works = {key: list(group) for key, group in itertools.groupby(results, key=lambda x: x.work.name.name)}
     if request.method == 'POST':
         if Result.dean_score != float(0):
+            result_sum = request.POST.get('result_sum')
+            evaluation, created = Evaluation.objects.get_or_create(employee=employee, evaluation_score=result_sum)
+
+            evaluation.save()
             for result in results:
                 save_obj = Save(
                     employee_id = result.employee.username,
@@ -297,14 +313,14 @@ def conclusion_view (request, employee_id):
                     employee_score = result.employee_score,
                     dean_score = result.dean_score,
                     result_score = result.result_score,
-                    file=result.file, 
+                    file=result.file,
                 )
-                save_obj.save() 
+                save_obj.save()
         return HttpResponseRedirect(reverse('selectfilter'))
  
     total_sum = (results.aggregate(Sum('total'))['total__sum'] or 0)
     score_sum = (results.aggregate(Sum('result_score'))['result_score__sum'] or 0)
-    result_sum = float(score_sum / 10)
+    result_sum = float(score_sum / total_sum)
     context = {
         'grouped_works': grouped_works,
         'employee': employee,
@@ -342,7 +358,7 @@ def Final (request, employee_id):
     grouped_works = {key: list(group) for key, group in itertools.groupby(results, key=lambda x: x.work.name.name)}
     total_sum = (results.aggregate(Sum('total'))['total__sum'] or 0)
     score_sum = (results.aggregate(Sum('result_score'))['result_score__sum'] or 0)
-    result_sum = float(score_sum / 10)
+    result_sum = float(score_sum / total_sum)
     context = {
         'grouped_works': grouped_works,
         'employee': employee,
@@ -384,7 +400,7 @@ def work_history_view(request):
     page_number = request.GET.get('page')
 
     # Number of items to display per page (you can customize this)
-    items_per_page = request.GET.get('items_per_page', 10)  # Default to 10 items per page
+    items_per_page = request.GET.get('items_per_page', 20)  # Default to 10 items per page
 
     # Create a Paginator instance
     paginator = Paginator(workdata_history, items_per_page)
@@ -404,3 +420,50 @@ def work_history_view(request):
 
 
     return render(request,"work_history.html", context)
+
+def Total(request):
+    branch = request.GET.get('branch')  # Get the branch from the request
+    year_selected = request.GET.get('year')
+
+    current_year = datetime.now().year
+
+    # If no year is selected, default to the current year
+    if not year_selected:
+        year_selected = str(current_year)  # Convert to string as GET parameters are strings
+
+    evaluations = Evaluation.objects.all()
+
+    # Filter by branch if a branch is selected
+    if branch:
+        evaluations = evaluations.filter(employee__branch=branch)
+
+    # Filter by year. Ensure year_selected is an integer
+    evaluations = evaluations.filter(date__year=int(year_selected))
+
+    years = [year for year in range(current_year - 4, current_year + 1)]
+
+    branches = Employee.BRANCH_CHOICES
+    score_ranges = [
+        (0.0, 0.99),
+        (1.0, 1.99),
+        (2.0, 2.99),
+        (3.0, 3.99),
+        (4.0, 4.99),
+    ]
+
+    data = {}
+    for lower, upper in score_ranges:
+        count = evaluations.filter(
+            evaluation_score__gte=lower,
+            evaluation_score__lte=upper
+        ).count()
+        data[f'{lower}-{upper}'] = count
+
+    context = {
+        'data': data,
+        'branches': branches,
+        'years': years,
+        'year_selected': year_selected,  # Pass the selected year back to the template
+    }
+
+    return render(request, "total.html", context)

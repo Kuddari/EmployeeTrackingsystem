@@ -1,9 +1,7 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 from django.utils import timezone
-from django.core.validators import MinValueValidator, MaxValueValidator
-
-
 
 
 class Employee(models.Model):
@@ -13,9 +11,16 @@ class Employee(models.Model):
         ('Lecturer', 'Lecturer'),
         ('Researcher', 'Researcher'),
     ]
+
+    BRANCH_CHOICES = [
+        ('IT', 'IT'),
+        ('RD', 'RD'),
+        ('DS', 'DS'),
+    ]
     position = models.CharField(max_length=50, choices=POSITION_CHOICES)
+    branch = models.CharField(max_length=50, choices = BRANCH_CHOICES)
     profile = models.FileField(upload_to='profile/', blank=True, null=True)
-           
+        
     def __str__(self):
         return f"{self.id} - {self.username.first_name} {self.username.last_name} - {self.position}"
     
@@ -79,7 +84,7 @@ class Save(models.Model):
     result_score = models.FloatField(default=0.0)
 
     file = models.FileField(upload_to=user_directory_path, blank=True, null=True)
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         self.result = self.total * self.dean_score
@@ -87,8 +92,14 @@ class Save(models.Model):
     
     def __str__(self):
         return f"{self.date} {self.employee_firstname} {self.employee_lastname} - {self.work} - {self.description}"
-    
 
+class Evaluation(models.Model):
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    evaluation_score = models.FloatField()
+    date = models.DateField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.date} - {self.employee} - {self.evaluation_score}"
 
 
 

@@ -117,3 +117,21 @@ input:checked + .slider:before {
     
 }
 
+@media (max-width: 480px) {
+  .color {
+      font-size: 16px;
+      width: 250px;
+      padding: 10px;
+  }
+
+  .dec {
+     font-size: 16px;
+     padding: 5px 10px;
+  }
+
+  .dece {
+      margin-top: 15%;
+  }
+  
+}
+

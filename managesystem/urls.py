@@ -1,5 +1,6 @@
-from django.urls import path
 from django.contrib.auth import views as auth_views
+from django.urls import path
+
 from . import views
 
 urlpatterns = [
@@ -17,4 +18,6 @@ urlpatterns = [
      path('final_conclusion/<int:employee_id>/', views.Final, name='final_conclusion'),
     path('download_file/<int:result_id>/', views.download_file_view, name='download_file'),
     path('work_history/', views.work_history_view, name='work_history'),
+    path('total/', views.Total, name='total'),
+
 ]

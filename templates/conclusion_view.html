@@ -106,8 +106,10 @@
                                     </tr>
                                     <tr class="text-center align-middle">
                                         <td class="text-left" colspan="3">สรุปคะแนนส่วนผลสัมฤทธิ์ของงาน = </td>
-                                        <td colspan="3"> ผลรวมของค่าคะแนนถ่วงน้ำหนัก...{{ score_sum|floatformat:1 }}..../10 =</td>
-                                        <td colspan="2">{{ result_sum|floatformat:1 }}</td>
+                                        <td colspan="3"> ผลรวมของค่าคะแนนถ่วงน้ำหนัก...{{ score_sum|floatformat:1 }}..../{{total_sum}} =</td>
+                                        <td colspan="2">
+                                            <input class="text-center" type="float" style="color: #04549c;" name="result_sum" value="{{ result_sum|floatformat:1 }}" readonly>
+                                        </td>
                                     </tr>
                         </tbody>
                         

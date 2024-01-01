@@ -73,41 +73,6 @@
                                 <td>{{ work.term1 }}</td>
                                 <td>{{ work.term2 }}</td>
                                 <td>{{ work.total }}</td>
-                                <td>
-                                    <a href="#" class="save-data" onclick="toggleFile('{{ work.work.id }}'); return false;">
-                                        <i class="fas fa-save"></i>
-                                    </a>
-                                </td>
-                               
-                                    
-                                    <div id="hidden-file-{{ work.work.id }}" class="hidden-file">
-                                        <div class="d-flex justify-content-end">
-                                            <button type="button" class="close mb-3 color-buttom-close" onclick="closeFile('{{ work.work.id }}')">X</button>
-                                        </div>
-                                        <div id="file-uploads-{{ work.id }}">
-                                            <p>ต้องเป็นไฟล์ ZIP เท่านั้น</p>
-                                            <label for="fileInput-{{ work.id }}" class="choose-file mb-3" style="cursor: pointer;">
-
-                                                {% for message in messages %}
-                                                <li style="list-style: none;">{{ message }}</li>
-                                            {% endfor %}
-                                            {% if work.file %}
-                                            {{  work.file }}
-
-                                            {% else %}
-                                            เลือกไฟล์
-                                           {% endif %}
-                                            
-                                            </label>
-                                            
-                                            <input type="file" id="fileInput-{{ work.id }}" class="hidden-input" name="fileInput-{{ work.id }}" onchange="updateFileName(this, '{{ work.id }}')" />
-                                        </div>
-                                        
-                
-                                        <div class="d-flex justify-content-end">
-                                            <button class="color-buttom" type="submit">ยืนยัน</button>
-                                        </div>
-                                    </div>       
                         </tr>
                     </form>
                     {% endfor %}
@@ -157,38 +122,6 @@
         }
     
         </script>
-
-<script>
-    // JavaScript functions for toggling the file box
-    function closeFile(workId) {
-        var fileBox = document.getElementById('hidden-file-' + workId);
-        fileBox.style.display = 'none';
-    }
-
-    function toggleFile(workId) {
-        var fileBox = document.getElementById('hidden-file-' + workId);
-        if (fileBox.style.display === 'block') {
-            closeFile(workId);
-        } else {
-            var allFileBoxes = document.getElementsByClassName('hidden-file');
-            for (var i = 0; i < allFileBoxes.length; i++) {
-                allFileBoxes[i].style.display = 'none';
-            }
-            fileBox.style.display = 'block';
-        }
-    }
-</script>
-
-<script>
-     function updateFileName(input, labelId) {
-        const fileLabel = document.querySelector(`label[for="fileInput-${labelId}"]`);
-        fileLabel.textContent = input.files[0].name;
-    }
-</script>
-
-
-
-    
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>

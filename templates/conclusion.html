@@ -18,7 +18,7 @@
         <h3 class="mb-4 name">{{employee.username.first_name}} {{employee.username.last_name}}</h3>
     </div>
         <div class="table-responsive">
-            <form action="" method="POST">
+            <form action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <table id="workdata-table" class="table table-bordered">
                     <thead class="thead-dark">
@@ -32,10 +32,11 @@
                             <th data-filter="true" data-filter-type="select">คะแนนคณบดี</th>
                             <th id="sem2Header" data-filter="true" data-filter-type="select">File</th>
                             {% else %}
+                            <th id="sem2Header" data-filter="true" data-filter-type="select">อัพโหลดFile ZIP</th>
                             <th data-filter="true" data-filter-type="select" style="display: none;">คะแนนคณบดี</th>
                             <th id="sem2Header" data-filter="true" data-filter-type="select" style="display: none;">ค่าคะแนนถ่วงน้ำหนัก</th>
                             {% endif %}
-                           
+
                         </tr>
                     </thead>
                     <tbody>
@@ -43,9 +44,9 @@
                         <tr>
                             <td rowspan="{{ group_works|length }}">{{ group_name }}</td>
                             <td name="{{group_works.0.work.name.id}}">{{ group_works.0.work.name.description }}</td>
-                               
+                
                             <td class="text-center align-middle" style="width: 10%;">
-                                ({{group_works.0.total}} - {{group_works.0.work.maxunit}})
+                                ({{group_works.0.work.minunit}} - {{group_works.0.work.maxunit}})
                             </td>
                                 
                             <td class="text-center align-middle" style="width: 7%;">
@@ -53,10 +54,10 @@
                             </td>
                             <td  class="align-middle text-center">
                                 {% if user.employee.position == 'Dean' %}
-                                    {% if user.first_name == employee.username.first_name   %}
+                                    {% if user.first_name == employee.username.first_name %}
                                     <input class="text-center" type="number" step="0.1" min="0" max="5" value="{{ group_works.0.employee_score }}" name="employee_score_{{ group_works.0.id }}">
                                     {% else %}
-                                    {{ group_works.0.employee_score }}
+                                    <input class="text-center" style="color: #04549c;" type="number" step="0.1" min="0" max="5" value="{{ group_works.0.employee_score }}" name="employee_score_{{ group_works.0.id }}" readonly>
                                     {% endif %}
                                 {% else %}
                                 <input class="text-center" type="number" step="0.1" min="0" max="5" value="{{ group_works.0.employee_score }}" name="employee_score_{{ group_works.0.id }}">
@@ -71,18 +72,14 @@
                                 <input class="text-center" type="number" step="0.1" min="0" max="5" value="{{ group_works.0.dean_score }}" name="dean_score_{{ group_works.0.id }}">
                             </td>
                             {% endif %}
-                            {% if user.employee.position == 'Dean' %} 
                             <td class="text-center align-middle">
                             {% if group_works.0.file %}
                                 <a href="{% url 'download_file' group_works.0.id %}">ดาวน์โหลด</a>
                             {% else %}
-                                No File
+                                <label for="fileInput-{{ group_works.0.id }}" class="custom-file-label" style="cursor: pointer;">Choose File</label>
+                                <input type="file" id="fileInput-{{ group_works.0.id }}" class="d-none" name="fileInput_{{ group_works.0.id }}" accept=".zip" onchange="updateFileName(this, '{{ group_works.0.id }}')" />
                             {% endif %}</td>
-                            {% endif %}
-                            
                         </tr>
-                        
-                           
                         
                             {% for work in group_works|slice:"1:" %}
                                     <tr>
@@ -90,7 +87,7 @@
                                         <td>{{ work.work.name.description }}</td>
                                         
                                             <td class="text-center align-middle" style="width: 10%;">
-                                                ({{work.work.minunit}} - {{work.work.maxunit}}) 
+                                                ({{work.work.minunit}} - {{work.work.maxunit}})
                                             </td>
 
                                         <td  class="text-center align-middle">
@@ -98,10 +95,10 @@
                                         </td>
                                         <td  class="align-middle text-center">
                                             {% if user.employee.position == 'Dean' %}
-                                                {% if user.first_name == employee.username.first_name   %}
+                                                {% if user.first_name == employee.username.first_name  %}
                                                 <input class="text-center" type="number" step="0.1" min="0" max="5" value="{{ work.employee_score }}" name="employee_score_{{work.id}}">
                                                 {% else %}
-                                                {{ work.employee_score }}
+                                                <input class="text-center" style="color: #04549c;" type="number" step="0.1" min="0" max="5" value="{{ work.employee_score }}" name="employee_score_{{work.id}}" readonly>
                                                 {% endif %}
                                             {% else %}
                                             <input class="text-center" type="number" step="0.1" min="0" max="5" value="{{ work.employee_score }}" name="employee_score_{{work.id}}">
@@ -120,18 +117,16 @@
                                         </td>
                                         {% endif %}
 
-                                        {% if user.employee.position == 'Dean' %}
                                         <td class="text-center align-middle">
                                         {% if work.file %}
                                             <a href="{% url 'download_file' work.id %}">ดาวน์โหลด</a>
                                         {% else %}
-                                            No File
+                                            <label for="fileInput-{{ work.id }}" class="custom-file-label" style="cursor: pointer;">Choose File</label>
+                                            <input type="file" id="fileInput-{{ work.id }}" class="d-none" name="fileInput_{{ work.id }}" accept=".zip" onchange="updateFileName(this, '{{ work.id }}')" />
                                         {% endif %}</td>
-                                        {% endif %}
                                     </tr>
                                     {% endfor %}
                                     {% endfor %}
-                                   
                         </tbody>
                         
                     </table>
@@ -139,7 +134,7 @@
                         <div class="d-flex justify-content-end mb-3">
                             <button type="submit" style="border-radius: 50px; font-size: 20px;">ยืนยัน</button>
                         </div>
-                   
+    
                 </form>
             
 
@@ -147,7 +142,13 @@
         </div>
     </div>
    
-
+    <script>
+        function updateFileName(inputElement, workId) {
+            var fileLabel = document.querySelector('label[for="fileInput-' + workId + '"]');
+            var fileName = inputElement.files[0].name;
+            fileLabel.textContent = fileName;
+        }
+    </script>
 
 </body>
 </html>

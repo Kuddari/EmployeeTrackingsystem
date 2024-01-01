@@ -30,14 +30,14 @@
                         <tr>
                             <td rowspan="{{ group_works|length }}">{{ group_name }}</td>
 
-                                {% if group_works.0.employee %}
+                                {% if group_works.0.work.name %}
                                 <td name="{{group_works.0.work.name.id}}">{{ group_works.0.work.name.description }}</td>
                                 {% else %}
                                 <td name="{{group_works.0.name.id}}">{{ group_works.0.name.description }}</td>
                                 {% endif %}
                             
                             
-                            <td class="text-center align-middle" style="width: 10%;">{%if group_works.0.employee %}
+                            <td class="text-center align-middle" style="width: 10%;">{%if group_works.0.work.name %}
                                 ({{group_works.0.work.minunit}} - {{group_works.0.work.maxunit}})
                                 {% else %}
                                 ({{group_works.0.minunit}} - {{group_works.0.maxunit}})
@@ -45,17 +45,24 @@
                             </td>
                                 
                             <td class="align-middle">
-                                <input class="text-center" type="number" value="{% if group_works.0.term1 > 0 %}{{ group_works.0.term1 }}{% else %}0{% endif %}" 
+                                <input class="text-center"
+                                type="number"
+                                min="{%if group_works.0.work.name %}{{group_works.0.work.minunit}}{% else %}{{group_works.0.minunit}}{% endif %}"
+                                max="{%if group_works.0.work.name %}{{group_works.0.work.maxunit}}{% else %}{{group_works.0.maxunit}}{% endif %}"
+                                value="{% if group_works.0.term1 > 0 %}{{ group_works.0.term1 }}{% else %}0{% endif %}"
                                 name="{% if group_works.0.work.employee %}term1_{{ group_works.0.work.id }}{% else %}term1_{{ group_works.0.id }}{% endif %}">
                             </td>
                             <td id="sem2Cell" data-id="{{ group_works.0.work.id }}" class="text-center align-middle">
-                                <input class="text-center" type="number" value="{% if group_works.0.term2 > 0 %}{{ group_works.0.term2 }}{% else %}0{% endif %}" 
+                                <input class="text-center"
+                                type="number"
+                                min="{%if group_works.0.work.name %}{{group_works.0.work.minunit}}{% else %}{{group_works.0.minunit}}{% endif %}"
+                                max="{%if group_works.0.work.name %}{{group_works.0.work.maxunit}}{% else %}{{group_works.0.maxunit}}{% endif %}"
+                                value="{% if group_works.0.term2 > 0 %}{{ group_works.0.term2 }}{% else %}0{% endif %}"
                                 name="{% if group_works.0.work.employee %}term2_{{ group_works.0.work.id }}{% else %}term2_{{ group_works.0.id }}{% endif %}">
                             </td>
                             
                         </tr>
                         
-                           
                         
                             {% for work in group_works|slice:"1:" %}
                                     <tr>
@@ -74,18 +81,29 @@
                                             </td>
 
                                         <td  class="align-middle">
-                                            <input class="text-center" type="number" value="{% if work.term1 > 0 %}{{ work.term1 }}{% else %}0{% endif %}" 
+                                            <input class="text-center"
+                                            type="number"
+                                            min="{% if work.work.name %}{{work.work.minunit}}{% else %}{{work.minunit}}{% endif %}"
+                                            max="{% if work.work.name %}{{work.work.maxunit}}{% else %}{{work.maxunit}}{% endif %}"
+                                            value="{% if work.term1 > 0 %}{{ work.term1 }}{% else %}0{% endif %}"
                                             name="{% if work.work.employee %}term1_{{work.name.id}}{% else %}term1_{{work.id}}{% endif %}">
                                         </td>
                                         <td id="sem2Cell" data-id="{{ work.work.id }}" class="align-middle">
-                                            <input class="text-center" type="number" value="{% if work.term2 > 0 %}{{ work.term2 }}{% else %}0{% endif %}" 
+                                            <input class="text-center"
+                                            type="number"
+                                            min="{% if work.work.name %}{{work.work.minunit}}{% else %}{{work.minunit}}{% endif %}"
+                                            max="{% if work.work.name %}{{work.work.maxunit}}{% else %}{{work.maxunit}}{% endif %}"
+                                            value="{% if work.term2 > 0 %}{{ work.term2 }}{% else %}0{% endif %}"
                                             name="{% if work.work.employee %}term2_{{ work.work.id }}{% else %}term2_{{ work.id }}{% endif %}">
                                         </td>
                                         
                                     </tr>
                                     {% endfor %}
                                     {% endfor %}
-                    
+                                <td colspan="3"></td>
+                                <td class="term1-total text-center"></td>
+                                <td class="term2-total text-center"></td>
+
                             </tbody>
                         </table>
                         
@@ -121,5 +139,35 @@
         });
 
         </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Function to calculate and update totals
+                function updateTotals() {
+                    let totalTerm1 = 0;
+                    let totalTerm2 = 0;
+
+                    document.querySelectorAll('input[name^="term1_"]').forEach(input => {
+                        totalTerm1 += Number(input.value) || 0;
+                    });
+
+                    document.querySelectorAll('input[name^="term2_"]').forEach(input => {
+                        totalTerm2 += Number(input.value) || 0;
+                    });
+
+                    document.querySelectorAll('.term1-total').forEach(cell => cell.textContent = totalTerm1);
+                    document.querySelectorAll('.term2-total').forEach(cell => cell.textContent = totalTerm2);
+                }
+
+                // Initial calculation
+                updateTotals();
+
+                // Event listener for changes in input fields
+                document.querySelectorAll('input[type="number"]').forEach(input => {
+                    input.addEventListener('input', updateTotals);
+                });
+            });
+        </script>
+
 </body>
 </html>

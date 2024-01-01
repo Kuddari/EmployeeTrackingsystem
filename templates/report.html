@@ -40,9 +40,10 @@
                     <td class="text-center align-middle" style="width: 12%;">
                         ({{group_works.0.work.minunit}} - {{group_works.0.work.maxunit}})
                     </td>
-                    <td class="align-middle">{{ group_works.0.term1 }}</td> 
-                    <td class="align-middle">{{ group_works.0.term2 }}</td>  
-                    <td class="align-middle">{{ group_works.0.total }}</td>  
+                    <td class="align-middle" data-term1="{{ group_works.0.term1 }}">{{ group_works.0.term1 }}</td>
+                    <td class="align-middle" data-term2="{{ group_works.0.term2 }}">{{ group_works.0.term2 }}</td>
+                    <td class="align-middle" data-total="{{ group_works.0.total }}">{{ group_works.0.total }}</td>
+                    
                     <!-- <td></td> -->
                 </tr>
 
@@ -53,19 +54,24 @@
                             <td class="text-center align-middle" style="width: 10%;">
                                  ({{work.work.minunit}} - {{work.work.maxunit}})
                             </td>
-                        <td class="align-middle">{{ work.term1 }}</td>
-                        <td class="align-middle">{{ work.term2 }}</td>
-                        <td class="align-middle">{{ work.total }}</td>
-                    </tr>
+                            <td class="align-middle" data-term1="{{ work.term1 }}">{{ work.term1 }}</td>
+                            <td class="align-middle" data-term2="{{ work.term2 }}">{{ work.term2 }}</td>
+                            <td class="align-middle" data-total="{{ work.total }}">{{ work.total }}</td>
+                        </tr>
                     {% endfor %}
                 {% endfor %}
+                <td colspan="3"></td>
+                <td class="term1-total text-center"></td>
+                <td class="term2-total text-center"></td>
+                <td class="total text-center"></td>
+
             </tbody>
         </table>
 
         </div>
-        {% for result in results %}
-        {% if result.term2 > 0 %}
-            {% if result.dean_score > 0 %}
+        {% with first_result=results.first %}
+        {% if first_result.term2 > 0 %}
+            {% if first_result.dean_score > 0 %}
             <div class="text-right">
                 <a class="color" href=" {% url 'final_conclusion' employee.id %} ">สรุปคะแนน</a>
             </div>
@@ -77,7 +83,8 @@
         {% else %}
         
         {% endif %}
-        {% endfor %}
+        {% endwith %}
+
             
     </div>
             
@@ -87,6 +94,34 @@
 <!-- Include Bootstrap JavaScript and jQuery (optional) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function updateTotals() {
+            let totalTerm1 = 0;
+            let totalTerm2 = 0;
+            let total = 0;
+
+            document.querySelectorAll('[data-term1]').forEach(cell => {
+                totalTerm1 += Number(cell.dataset.term1) || 0;
+            });
+
+            document.querySelectorAll('[data-term2]').forEach(cell => {
+                totalTerm2 += Number(cell.dataset.term2) || 0;
+            });
+            
+            document.querySelectorAll('[data-total]').forEach(cell => {
+                total += Number(cell.dataset.total) || 0;
+            });
+
+            document.querySelector('.term1-total').textContent = totalTerm1;
+            document.querySelector('.term2-total').textContent = totalTerm2;
+            document.querySelector('.total').textContent = total;
+        }
+
+        // Initial calculation
+        updateTotals();
+    });
+</script>
 
 
 </body>

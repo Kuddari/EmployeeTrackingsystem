@@ -30,11 +30,11 @@ h1,h2,h3,h4,h5,h6,p,a {
 }
 
 .infor h3 {
-    margin-top: 10px;
+    margin-top: 13px;
 }
 
 .infor .h3 {
-    margin-top: 10px;
+    margin-top: 13px;
 }
 
 .infor a:hover {
@@ -42,8 +42,9 @@ h1,h2,h3,h4,h5,h6,p,a {
 }
 
 .infor img {
-    width: 50px;
-    height: 50px;
+    margin-top: 3px;
+    width: 60px;
+    height: 60px;
     border-radius: 50px;
 }
 
@@ -107,6 +108,7 @@ h1,h2,h3,h4,h5,h6,p,a {
     }
 
     .infor img {
+        margin-top: 6px;
         width: 40px;
         height: 40px;
     }
@@ -134,18 +136,18 @@ h1,h2,h3,h4,h5,h6,p,a {
     }
 
     .infor h3 {
-        margin-top: 8px;
+        margin-top: 15px;
         font-size: 14px;
     }
 
     .infor .h3 {
-        margin-top: 8px;
+        margin-top: 15px;
         font-size: 14px;
     }
 
     .infor img {
-        width: 30px;
-        height: 30px;
+        width: 40px;
+        height: 40px;
     }
 
     .custom-dropdown .selected-option {
@@ -159,26 +161,29 @@ h1,h2,h3,h4,h5,h6,p,a {
 
 @media (max-width: 600px) {
     .color {
-        font-size: 28px;
+        font-size: 18px;
         padding: 5px 8px;
        
     }
-  
+    .color1 {
+        font-size: 18px;
+    }
 
     .infor h3 {
-        /* margin-top: 8px; */
+        margin-top: 15px;
         font-size: 12px;
     }
 
     .infor .h3 {
-        /* margin-top: 8px; */
+        margin-top: 15px;
         font-size: 12px;
     }
 
     .infor img {
+        margin-top: 5px;
         padding: 0px;
-        width: 25px;
-        height: 25px;
+        width: 40px;
+        height: 40px;
     }
     .custom-dropdown .selected-option {
         color: #00509D;
@@ -190,3 +195,44 @@ h1,h2,h3,h4,h5,h6,p,a {
 }
 
 
+@media (max-width: 480px) {
+    .infor {
+        padding: 0px;
+    }
+
+    .color {
+        margin-top: 3px;
+        font-size: 14px;
+        padding: 5px 8px;
+       
+    }
+    
+    .color1 {
+        margin-top: 3px;
+       font-size: 14px;
+    }
+
+    .infor h3 {
+        margin-top: 15px;
+        font-size: 10px;
+    }
+
+    .infor .h3 {
+        margin-top: 15px;
+        font-size: 10px;
+    }
+
+    .infor img {
+        margin-top: 10px;
+        width: 25px;
+        height: 25px;
+    }
+    .custom-dropdown .selected-option {
+        color: #00509D;
+        padding: 5px;
+        cursor: pointer;
+        margin-top: -4px;
+    }
+
+
+}

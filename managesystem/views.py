@@ -1,21 +1,25 @@
 import itertools
-import os
-from collections import Counter
 from datetime import datetime, timedelta
 
-import matplotlib.pyplot as plt
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.core.paginator import Paginator
-from django.db.models import Case, Count, Sum, When
+from django.db.models import Sum
 from django.http import (Http404, HttpResponse, HttpResponseBadRequest,
                          HttpResponseRedirect)
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
 from .models import *
+
+def custom_login_required(function):
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.info(request, "กรุณาเข้าสู่ระบบ")  # Custom message
+            return redirect('login')  # Redirect to login URL
+        return function(request, *args, **kwargs)
+    return wrapper
 
 
 def login_view(request):
@@ -49,7 +53,14 @@ def login_view(request):
 
     return render(request, 'login.html')
 
-@login_required
+def Log_out(request):
+    # sign user out
+    logout(request)
+
+    # Redirect to sign-in page
+    return redirect('login')
+
+@custom_login_required
 def selectfilter_view(request):
     try:
         employee = Employee.objects.get(username=request.user)
@@ -60,7 +71,7 @@ def selectfilter_view(request):
 
     return render(request, "selectfilter.html")
 
-@login_required
+@custom_login_required
 def informationstaff_view(request):
     selected_position = request.GET.get('position', None)
     if selected_position is None:
@@ -78,6 +89,7 @@ def informationstaff_view(request):
 
     return render(request, "informationstaff.html", context)
 
+@custom_login_required
 def informationuser_view(request):
     employee = Employee.objects.get(username=request.user)
     results = Result.objects.filter(employee=employee)
@@ -115,7 +127,7 @@ def informationuser_view(request):
     return render(request, "informationuser.html", context)
 
 
-@login_required
+@custom_login_required
 def formreport_view(request):
     selected_position = request.GET.get('position')
     unit = Setunit.objects.filter(position=selected_position)
@@ -170,7 +182,7 @@ def formreport_view(request):
 
     return render(request, 'formreport.html', context)
 
-
+@custom_login_required
 def formreportuser_view(request):
     employee = Employee.objects.get(username=request.user)
     results = Result.objects.filter(employee=employee)
@@ -218,7 +230,7 @@ def formreportuser_view(request):
     return render(request, 'formreportuser.html', context)
 
 
-@login_required
+@custom_login_required
 def report_view(request, employee_id):
     # Get the employee based on the provided employee_id
     employee = get_object_or_404(Employee, id=employee_id)
@@ -234,7 +246,7 @@ def report_view(request, employee_id):
     }
     return render(request, "report.html", context)
 
-
+@custom_login_required
 def delete_data_view(request):
     # Check if the request method is POST
     if request.method == 'POST':
@@ -255,6 +267,7 @@ def delete_data_view(request):
     # Render a template with a button to trigger the deletion
     return render(request, 'delete_data.html')
 
+@custom_login_required
 def conclusion(request, employee_id):
     employee = get_object_or_404(Employee, id=employee_id)
     results = Result.objects.filter(employee=employee)
@@ -292,6 +305,7 @@ def conclusion(request, employee_id):
 
     return render(request,"conclusion.html", context)
 
+@custom_login_required
 def conclusion_view (request, employee_id):
     employee = get_object_or_404(Employee, id=employee_id)
     results = Result.objects.filter(employee=employee)
@@ -352,6 +366,7 @@ def download_file_view(request, result_id):
 
     return response
 
+@custom_login_required
 def Final (request, employee_id):
     employee = get_object_or_404(Employee, id=employee_id)
     results = Result.objects.filter(employee=employee)
@@ -369,7 +384,7 @@ def Final (request, employee_id):
 
     return render(request,"final.html", context)
 
-
+@custom_login_required
 def work_history_view(request):
     workdata_history = Save.objects.all()
     start_date = request.GET.get('start_date')
@@ -421,6 +436,7 @@ def work_history_view(request):
 
     return render(request,"work_history.html", context)
 
+@custom_login_required
 def Total(request):
     branch = request.GET.get('branch')  # Get the branch from the request
     year_selected = request.GET.get('year')

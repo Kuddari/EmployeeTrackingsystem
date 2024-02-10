@@ -95,7 +95,6 @@ h1, h2, h3, h4, h5, h6, p, a,th ,td, button {
     border-bottom: 2px solid #00509D;
 }
 
-
 .color {
     font-size: 20px;
     text-decoration: none;
@@ -104,6 +103,7 @@ h1, h2, h3, h4, h5, h6, p, a,th ,td, button {
     padding: 10px 10px;
     border: 3px solid #00509D;
 }
+
 
 .color-buttom {
     font-size: 14px;

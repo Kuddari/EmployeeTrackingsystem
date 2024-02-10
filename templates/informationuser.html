@@ -12,7 +12,7 @@
     
 </head>
 <body>
- 
+
     <div class="container text-center">
         <h2 class="name">{{user.first_name}} {{user.last_name}}</h2>
         {% if user.employee.profile  %}
@@ -70,9 +70,10 @@
                             <tr>
                                 <td class="description" name="description-{{work.id}}">{{ work.work.name.description }}</td>
                                 <td style="width: 20%;">({{ work.work.minunit }} - {{ work.work.maxunit }})</td>
-                                <td>{{ work.term1 }}</td>
-                                <td>{{ work.term2 }}</td>
-                                <td>{{ work.total }}</td>
+                                <td data-term1="{{ work.term1 }}">{{ work.term1 }}</td>
+                                <td data-term2="{{ work.term2 }}">{{ work.term2 }}</td>
+                                <td data-total="{{ work.total }}">{{ work.total }}</td>
+
                         </tr>
                     </form>
                     {% endfor %}
@@ -94,8 +95,24 @@
             
         </div>
         {% endfor %}
+                <div class="row mb-4 px-3 px-md-1">
+                    <div class="col-7"></div>
+                    <div class="col-2 d-flex justify-content-center">
+                        <p class="h5">รวม</p>
+                    </div>
+                    <div class="col-1 d-flex justify-content-center">
+                        <p class="term1-total h5"></p>
+                    </div>
+                    <div class="col-1 d-flex justify-content-center">
+                        <p class="term2-total h5"></p>
+                    </div>
+                    <div class="col-1 d-flex justify-content-center">
+                        <p class="total h5"></p>
+                    </div>
+                </div>
     
-        <div class="row">
+    
+        <div class="row mb-4">
             <div class="col-6"></div>
             <div class="col-3">
                 <a class="h3 d-flex justify-content-center mt-1 color" href="{% url 'report' user.employee.id %}">รายละเอียดงาน</a>
@@ -104,7 +121,10 @@
                 <a class="h3 d-flex justify-content-center mt-1 color" href="{% url 'formreportuser' %}">กำหนดเกณฑ์</a>
             </div>
         </div>
+
+        
     </div>
+
     <script>
         function closeBox(groupId) {
             var hiddenBox = $('#hiddenBox' + groupId);
@@ -122,6 +142,36 @@
         }
     
         </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    function updateTotals() {
+        let totalTerm1 = 0;
+        let totalTerm2 = 0;
+        let total = 0;
+
+        document.querySelectorAll('[data-term1]').forEach(cell => {
+            totalTerm1 += Number(cell.dataset.term1) || 0;
+        });
+
+        document.querySelectorAll('[data-term2]').forEach(cell => {
+            totalTerm2 += Number(cell.dataset.term2) || 0;
+        });
+        
+        document.querySelectorAll('[data-total]').forEach(cell => {
+            total += Number(cell.dataset.total) || 0;
+        });
+
+        document.querySelector('.term1-total').textContent = totalTerm1;
+        document.querySelector('.term2-total').textContent =  totalTerm2;
+        document.querySelector('.total').textContent = total;
+    }
+
+    // Initial calculation
+    updateTotals();
+});
+
+</script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>

@@ -1,15 +1,13 @@
-version: '3.9'
-
+version: "3.8"
 services:
-  django:
-    build: .
-    
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
     volumes:
-      - .:/system
+      - .:/employee
     ports:
-      - "8080:8000"  # Map host port 8080 to container port 8000
-    image: employeetrackingsystem:django
-    container_name: djangosystem_container
-    command: python manage.py runserver 0.0.0.0:8000
-    # Use the official Python image from Docker Hub
-    # The rest of your Dockerfile content should go here
+      - 8080:8000
+    image: employee:django
+    container_name: employee_container
+    # command: python manage.py runserver 0.0.0.0:8000

@@ -1,23 +1,35 @@
-# Use the official Python image from Docker Hub
-FROM python:3.10
+FROM python:3.10-slim
+
+# Install necessary system dependencies for Node.js
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
+RUN apt-get install -y nodejs
 
 # Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED=1
 
-# Set the working directory in the container
-WORKDIR /code
+# Set working directory
+WORKDIR /employee
 
-# Copy the project files to the working directory
+# Upgrade pip
+RUN pip install --upgrade pip
 
-RUN apt-get update && apt-get -y upgrade
+# Copy requirements and install them
+COPY requirements.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-COPY requirement.txt /code
-
-RUN pip install -r requirement.txt
-
-RUN pip install django
-
+# Copy the rest of the application code
 COPY . .
 
-CMD ["python","manage.py","runserver"]
+# Install Node.js dependencies if you have any
+# RUN npm install
+
+# Collect static files (if applicable)
+# RUN python manage.py collectstatic --no-input
+
+# Command to run the Django server and Tailwind CSS
+CMD ["python","manage.py","runserver","0.0.0.0:8000"]

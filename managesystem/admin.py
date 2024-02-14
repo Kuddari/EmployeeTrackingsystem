@@ -10,7 +10,7 @@ class UserAdmin(ImportExportModelAdmin):
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 
-admin.site.register(Employee)
+admin.site.register(Employee, ImportExportModelAdmin)
 admin.site.register(Work, ImportExportModelAdmin)
 admin.site.register(Setunit, ImportExportModelAdmin)
 admin.site.register(Result, ImportExportModelAdmin)

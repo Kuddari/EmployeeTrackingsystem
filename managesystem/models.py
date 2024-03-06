@@ -21,6 +21,8 @@ class Employee(models.Model):
         
     def __str__(self):
         return f"{self.id} - {self.username.first_name} {self.username.last_name} - {self.position}"
+    class Meta:
+        verbose_name_plural = "พนักงาน"
     
 class Work(models.Model):
     name = models.CharField(max_length=100) ### col for กิจกรรม
@@ -28,6 +30,9 @@ class Work(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.description}"
+
+    class Meta:
+        verbose_name_plural = "งาน"
     
 class Setunit(models.Model):
     name = models.ForeignKey(Work,on_delete=models.CASCADE) ### ตำแหน่ง
@@ -41,6 +46,9 @@ class Setunit(models.Model):
     position = models.CharField(max_length=50, choices=POSITION_CHOICES)
     def __str__(self):
         return f"{self.id} - {self.position} - {self.name.name} - {self.name.description}"
+    
+    class Meta:
+        verbose_name_plural = "ค่าประเมิณแต่ละเทอม"
 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/username/filename
@@ -67,6 +75,9 @@ class Result(models.Model):
 
     def __str__(self):
         return f"{self.employee} - {self.work}"
+
+    class Meta:
+        verbose_name_plural = "ผลลัพธ์แต่ละปี"
     
 
 
@@ -91,6 +102,9 @@ class Save(models.Model):
     def __str__(self):
         return f"{self.date} {self.employee_firstname} {self.employee_lastname} - {self.work} - {self.description}"
 
+    class Meta:
+        verbose_name_plural = "บันทึกข้อมูล"
+
 class Evaluation(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     evaluation_score = models.FloatField()
@@ -98,6 +112,9 @@ class Evaluation(models.Model):
     
     def __str__(self):
         return f"{self.date} - {self.employee} - {self.evaluation_score}"
+
+    class Meta:
+        verbose_name_plural = "สรุปข้อมูล"
 
 
 

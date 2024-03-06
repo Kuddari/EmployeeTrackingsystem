@@ -48,7 +48,7 @@ class Setunit(models.Model):
         return f"{self.id} - {self.position} - {self.name.name} - {self.name.description}"
     
     class Meta:
-        verbose_name_plural = "ค่าประเมิณแต่ละเทอม"
+        verbose_name_plural = "กำหนดคะแนนประเมิณ"
 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/username/filename
@@ -77,7 +77,7 @@ class Result(models.Model):
         return f"{self.employee} - {self.work}"
 
     class Meta:
-        verbose_name_plural = "ผลลัพธ์แต่ละปี"
+        verbose_name_plural = "ผลลัพธ์รายปี"
     
 
 

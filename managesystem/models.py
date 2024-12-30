@@ -6,8 +6,9 @@ class Employee(models.Model):
     username = models.OneToOneField(User, on_delete=models.CASCADE)
     POSITION_CHOICES = [
     ('Dean', 'คณบดี'),
-    ('Lecturer', 'อาจารย์'),
     ('Researcher', 'รองคณบดี'),
+    ('Lecturer', 'อาจารย์'),
+
     ]
 
     BRANCH_CHOICES = [

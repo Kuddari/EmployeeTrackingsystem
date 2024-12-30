@@ -5,9 +5,9 @@ from django.db import models
 class Employee(models.Model):
     username = models.OneToOneField(User, on_delete=models.CASCADE)
     POSITION_CHOICES = [
-        ('Dean', 'Dean'),
-        ('Lecturer', 'Lecturer'),
-        ('Researcher', 'Researcher'),
+    ('Dean', 'คณบดี'),
+    ('Lecturer', 'อาจารย์'),
+    ('Researcher', 'รองคณบดี'),
     ]
 
     BRANCH_CHOICES = [

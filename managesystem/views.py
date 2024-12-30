@@ -10,6 +10,7 @@ from django.http import (Http404, HttpResponse, HttpResponseBadRequest,
                          HttpResponseRedirect)
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from .form import UserRegistrationForm
 
 from .models import *
 
@@ -21,6 +22,23 @@ def custom_login_required(function):
         return function(request, *args, **kwargs)
     return wrapper
 
+def register_view(request):
+    # Check if the user is a staff member
+    if not request.user.is_staff:
+        return redirect('login')  # Redirect to login page if not staff
+
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            # Instead of logging in the user, just redirect to a success page or login page
+            return redirect(reverse('admin:index'))  # Redirect to login or any other page
+    else:
+        form = UserRegistrationForm()
+    
+    return render(request, 'register.html', {'form': form})
 
 def login_view(request):
     if request.user.is_authenticated:
